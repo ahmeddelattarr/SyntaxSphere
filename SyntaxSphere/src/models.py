@@ -24,7 +24,7 @@ class Likes(models.Model):
 	post_id= models.ForeignKey(Posts,on_delete=CASCADE)
 
 class Comments(models.Model):
-	id=models.CharField(max_length=100)
+	id = models.CharField(max_length=12,primary_key=True, editable=False)
 	user_id = models.ForeignKey(User, on_delete=CASCADE)
 	post_id = models.ForeignKey(Posts, on_delete=CASCADE)
 	comment=models.CharField(max_length=255)
