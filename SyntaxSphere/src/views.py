@@ -2,10 +2,10 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework import generics
+from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import User
-from .serializers import UserSerializer, SignInSerializer
+from .models import User, Posts
+from .serializers import UserSerializer, SignInSerializer, PostSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -49,9 +49,18 @@ class SignOutView(generics.CreateAPIView):
 
 	def post(self, request):
 		try:
-			refresh_token=request.data['refresh']
-			token=RefreshToken(refresh_token)
+			refresh_token = request.data['refresh']
+			token = RefreshToken(refresh_token)
 			token.blacklist()
 			return Response(status=status.HTTP_205_RESET_CONTENT)
 		except AttributeError:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class HandlingPostsViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+
+	queryset = Posts.objects.all()
+	serializer_class = PostSerializer
+	filter_backends = [filters.SearchFilter]
+	search_fields = ['title']
+	lookup_field='id'

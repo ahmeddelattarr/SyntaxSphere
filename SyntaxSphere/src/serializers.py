@@ -19,4 +19,24 @@ class SignInSerializer(serializers.Serializer):
 	username = serializers.CharField()
 	password = serializers.CharField()
 
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Posts
+        fields='__all__'
+
+class LikesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Likes
+        fields='__all__'
+
+class CommentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Comments
+        fields='__all__'
+
+
+
+
+
+
 
