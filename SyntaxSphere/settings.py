@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'SyntaxSphere.src',
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
 
 
 ]
@@ -125,3 +127,20 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+# JWT settings (optional but useful)
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Adjust token expiration time
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens for security
+    'BLACKLIST_AFTER_ROTATION': True,  # Enable token blacklisting
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Token type in the Authorization header
+}
