@@ -1,5 +1,3 @@
-
-
 # SyntaxSphere Project
 
 ## Overview
@@ -78,7 +76,7 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
 ### Post Management
 
 #### List Posts
-- **URL:** `/posts/list`
+- **URL:** `/posts/`
 - **Method:** `GET`
 - **Description:** Retrieve a list of all posts.
 - **Response:**
@@ -87,25 +85,24 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
     {
       "id": "uuid",
       "title": "string",
-      "content": "string",
-      "author": "string",
-      "created_at": "datetime",
-      "updated_at": "datetime"
+      "url": "string",
+      "user_id": "string",
+      "posted_at": "datetime",
+      "like_count": "integer"
     },
     ...
   ]
   ```
 
 #### Create Post
-- **URL:** `/posts/new`
+- **URL:** `/posts/`
 - **Method:** `POST`
 - **Description:** Create a new post.
 - **Request Data:**
   ```json
   {
     "title": "string",
-    "content": "string",
-    "author": "string"
+    "url": "string"
   }
   ```
 - **Response:**
@@ -113,15 +110,15 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
   {
     "id": "uuid",
     "title": "string",
-    "content": "string",
-    "author": "string",
-    "created_at": "datetime",
-    "updated_at": "datetime"
+    "url": "string",
+    "user_id": "string",
+    "posted_at": "datetime",
+    "like_count": "integer"
   }
   ```
 
 #### Retrieve Post
-- **URL:** `/posts/<uuid:id>`
+- **URL:** `/posts/<uuid:id>/`
 - **Method:** `GET`
 - **Description:** Retrieve a specific post by its ID.
 - **Response:**
@@ -129,17 +126,79 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
   {
     "id": "uuid",
     "title": "string",
-    "content": "string",
-    "author": "string",
-    "created_at": "datetime",
-    "updated_at": "datetime"
+    "url": "string",
+    "user_id": "string",
+    "posted_at": "datetime",
+    "like_count": "integer"
   }
   ```
 
 #### Delete Post
-- **URL:** `/posts/<uuid:id>`
+- **URL:** `/posts/<uuid:id>/`
 - **Method:** `DELETE`
 - **Description:** Delete a specific post by its ID.
+- **Response:** `HTTP 204 No Content` on success.
+
+### Like Management
+
+#### Like Post
+- **URL:** `/posts/<uuid:pk>/like/`
+- **Method:** `POST`
+- **Description:** Like a specific post.
+- **Response:**
+  ```json
+  {
+    "id": "uuid",
+    "user_id": "string",
+    "post_id": "string"
+  }
+  ```
+
+### Comment Management
+
+#### List Comments
+- **URL:** `/posts/<uuid:pk>/comments/`
+- **Method:** `GET`
+- **Description:** Retrieve a list of comments for a specific post.
+- **Response:**
+  ```json
+  [
+    {
+      "id": "uuid",
+      "user_id": "string",
+      "post_id": "string",
+      "comment": "string",
+      "posted_at": "datetime"
+    },
+    ...
+  ]
+  ```
+
+#### Create Comment
+- **URL:** `/posts/<uuid:pk>/comments/`
+- **Method:** `POST`
+- **Description:** Create a new comment for a specific post.
+- **Request Data:**
+  ```json
+  {
+    "comment": "string"
+  }
+  ```
+- **Response:**
+  ```json
+  {
+    "id": "uuid",
+    "user_id": "string",
+    "post_id": "string",
+    "comment": "string",
+    "posted_at": "datetime"
+  }
+  ```
+
+#### Delete Comment
+- **URL:** `/comments/<uuid:id>/`
+- **Method:** `DELETE`
+- **Description:** Delete a specific comment by its ID.
 - **Response:** `HTTP 204 No Content` on success.
 
 ## Installation
@@ -167,5 +226,4 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
 ## License
 MIT License
 
-Copyright (c) 2024 Ahmed elattar
-
+\© 2024 Ahmed elattar
