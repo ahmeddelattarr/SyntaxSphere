@@ -13,10 +13,13 @@ class Posts(models.Model):
 	url=models.URLField()
 	user_id=models.ForeignKey(User,on_delete=CASCADE)
 	posted_at=models.DateTimeField(default=timezone.now)
+	like_count = models.PositiveIntegerField(default=0)
+
 
 class Likes(models.Model):
 	user_id = models.ForeignKey(User, on_delete=CASCADE)
 	post_id= models.ForeignKey(Posts,on_delete=CASCADE)
+
 
 class Comments(models.Model):
 	id = models.CharField(max_length=12,primary_key=True, editable=False)

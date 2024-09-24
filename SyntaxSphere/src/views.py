@@ -1,10 +1,13 @@
+from telnetlib import STATUS
+
 from django.contrib.auth import authenticate
+from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import User, Posts
+from .models import User, Posts, Likes
 from .serializers import UserSerializer, SignInSerializer, PostSerializer
 
 
@@ -64,3 +67,38 @@ class HandlingPostsViewSet(viewsets.ModelViewSet):
 	filter_backends = [filters.SearchFilter]
 	search_fields = ['title']
 	lookup_field='id'
+
+
+class LikesViewSet(viewsets.ModelViewSet):
+
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        post_id = self.kwargs.get('pk')  # Get the 'post_id' from the URL (passed as 'pk')
+        user = request.user
+
+        # Ensure post exists
+        post = get_object_or_404(Posts, id=post_id)
+
+        # Check if the post is already liked by the user
+        liked = Likes.objects.filter(user_id=user, post_id=post).exists()
+
+        if liked:
+            # Unlike the post
+            Likes.objects.filter(user_id=user, post_id=post).delete()
+            post.like_count -= 1
+            post.save()
+            return Response({'message': 'Unliked', 'likes_count': post.like_count}, status=status.HTTP_200_OK)
+
+        else:
+            # Like the post
+            Likes.objects.create(user_id=user, post_id=post)
+            post.like_count += 1
+            post.save()
+            return Response({'message': 'Liked', 'likes_count': post.like_count}, status=status.HTTP_201_CREATED)
+
+
+
+
+
+
