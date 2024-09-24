@@ -22,7 +22,7 @@ class Likes(models.Model):
 
 
 class Comments(models.Model):
-	id = models.CharField(max_length=12,primary_key=True, editable=False)
+	id = models.UUIDField(primary_key=True ,default=uuid.uuid4, editable=False)
 	user_id = models.ForeignKey(User, on_delete=CASCADE)
 	post_id = models.ForeignKey(Posts, on_delete=CASCADE)
 	comment=models.CharField(max_length=255)
