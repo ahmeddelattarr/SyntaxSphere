@@ -31,10 +31,17 @@ class LikesSerializer(serializers.ModelSerializer):
 
 class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Comments
-        fields='__all__'
+        model = Comments
+        fields = ['id', 'user_id', 'post_id', 'comment', 'posted_at']
+        read_only_fields = ['id', 'user_id', 'post_id', 'posted_at']
 
-
+    def create(self, validated_data):
+        request = self.context.get('request')
+        post_id = self.context.get('view').kwargs.get('pk')
+        post = Posts.objects.get(id=post_id)
+        validated_data['user_id'] = request.user
+        validated_data['post_id'] = post
+        return super().create(validated_data)
 
 
 

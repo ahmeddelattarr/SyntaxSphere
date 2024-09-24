@@ -1,4 +1,4 @@
-from telnetlib import STATUS
+
 
 from django.contrib.auth import authenticate
 from rest_framework.generics import get_object_or_404
@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import User, Posts, Likes
-from .serializers import UserSerializer, SignInSerializer, PostSerializer
+from .models import User, Posts, Likes, Comments
+from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -96,6 +96,24 @@ class LikesViewSet(viewsets.ModelViewSet):
             post.like_count += 1
             post.save()
             return Response({'message': 'Liked', 'likes_count': post.like_count}, status=status.HTTP_201_CREATED)
+
+
+class CommentsViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentsSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+
+    def get_queryset(self):
+        post_id = self.kwargs.get('pk')
+        return Comments.objects.filter(post_id=post_id)
+
+    def perform_create(self, serializer):
+        post_id = self.kwargs.get('pk')
+        post = get_object_or_404(Posts, id=post_id)
+        serializer.save(user_id=self.request.user, post_id=post)
+
+
 
 
 
