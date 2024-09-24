@@ -195,11 +195,7 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
   }
   ```
 
-#### Delete Comment
-- **URL:** `/comments/<uuid:id>/`
-- **Method:** `DELETE`
-- **Description:** Delete a specific comment by its ID.
-- **Response:** `HTTP 204 No Content` on success.
+
 
 ## Installation
 1. Clone the repository:
