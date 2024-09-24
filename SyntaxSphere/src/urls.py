@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SignUpView, SignInView, SignOutView,HandlingPostsViewSet
+from .views import SignUpView, SignInView, SignOutView,HandlingPostsViewSet,LikesViewSet
 from rest_framework.routers import SimpleRouter
 
 
@@ -12,6 +12,8 @@ post_detail = HandlingPostsViewSet.as_view({
     'get': 'retrieve',
     'delete': 'destroy'
 })
+
+
 urlpatterns = [
 	path('signup/', SignUpView.as_view(), name='signup'),
 	path('signin/', SignInView.as_view(), name='signin'),
@@ -21,6 +23,8 @@ urlpatterns = [
 	path('posts/new', post_list, name='post-create'),  # Custom URL for creating a post
 	path('posts/<uuid:id>', post_detail, name='post-detail'),  # Custom URL for a specific post
 	path('posts/<uuid:id>', post_detail, name='post-delete'),
+
+	path('like/<uuid:pk>/', LikesViewSet.as_view({'post': 'create'}), name='like-post'),
 ]
 
 
