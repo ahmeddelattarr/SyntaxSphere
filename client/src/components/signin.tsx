@@ -1,75 +1,87 @@
-import { Button } from './ui/button.tsx'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from './ui/card.tsx'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
-import { signInViaEmailAndPassword } from '../db/auth.service.ts'
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.tsx";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button.tsx";
+import { useState } from "react";
 
 export default function SignIn() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // this is actually not the best way to handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const email = (event.target as any).email.value
-    const password = (event.target as any).password.value
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const username = (event.target as any).username.value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const password = (event.target as any).password.value;
 
-    await signInViaEmailAndPassword(email, password)
-  }
+    try {
+      const response = await fetch("http://localhost:8000/signin/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Failed to sign in.");
+        return;
+      }
+
+      await response.json();
+      setSuccessMessage("Sign-in successful!");
+    } catch (error) {
+      setErrorMessage(
+        "An error occurred while signing in. Please try again." + error
+      );
+    }
+  };
 
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
+        <CardTitle className="text-2xl">Sign In</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="username"
+                type="text"
+                placeholder="Your username"
                 required
               />
             </div>
             <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <a href="#"
-                   className="ml-auto inline-block text-sm underline">
-                  Forgot your password?
-                </a>
-              </div>
-              <Input id="password"
-                     type="password"
-                     required />
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Your password"
+                required
+              />
             </div>
-            <Button type="submit"
-                    className="w-full">
-              Login
+            <Button type="submit" className="w-full">
+              Sign In
             </Button>
-            <Button variant="outline"
-                    className="w-full">
-              Login with GitHub
-            </Button>
-          </div>
-          <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <a href="#"
-               className="underline">
-              Sign up
-            </a>
+            {errorMessage && (
+              <div className="text-red-500 text-sm">{errorMessage}</div>
+            )}
+            {successMessage && (
+              <div className="text-green-500 text-sm">{successMessage}</div>
+            )}
           </div>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }
