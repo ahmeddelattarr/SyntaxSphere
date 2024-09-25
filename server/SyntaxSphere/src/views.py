@@ -21,7 +21,10 @@ class SignUpView(generics.CreateAPIView):
 		if serializer.is_valid():
 			serializer.save()
 			user = User.objects.get(username=serializer.data['username'])
+			if not user.is_active:
+				return Response({'error': 'User account is disabled'}, status=status.HTTP_403_FORBIDDEN)
 			refresh = RefreshToken.for_user(user)
+
 			return Response({
 				'refresh': str(refresh),
 				'access': str(refresh.access_token),
@@ -38,7 +41,8 @@ class SignInView(generics.CreateAPIView):
 		username = request.data.get('username')
 		password = request.data.get('password')
 		user = authenticate(username=username, password=password)
-		if user:
+		if user and user.is_active:
+
 			refresh = RefreshToken.for_user(user)
 			return Response({
 				'refresh': str(refresh),
