@@ -1,39 +1,65 @@
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Button } from "./ui/button.tsx";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { signUpViaAPI } from '@/db/auth.service';
+} from "./ui/card.tsx";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 export default function SignUp() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // this is actually not the best way to handle form submission any
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const form = event.target as HTMLFormElement;
-    const username = (form.elements.namedItem('username') as HTMLInputElement).value;
-    const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-    const password = (form.elements.namedItem('password') as HTMLInputElement).value;
-    const firstName = (form.elements.namedItem('first_name') as HTMLInputElement).value;
-    const lastName = (form.elements.namedItem('last_name') as HTMLInputElement).value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const username = (event.target as any).username.value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const email = (event.target as any).email.value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const password = (event.target as any).password.value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const firstName = (event.target as any).first_name.value;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lastName = (event.target as any).last_name.value;
 
     try {
-      // Send the data to the signup API
-      const response = await signUpViaAPI({ username, email, password, first_name: firstName, last_name: lastName });
+      const response = await fetch("http://localhost:8000/signup/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          first_name: firstName,
+          last_name: lastName,
+        }),
+      });
 
-      // Store the tokens in localStorage
-      localStorage.setItem('access', response.access);
-      localStorage.setItem('refresh', response.refresh);
+      if (!response.ok) {
+        // Handle errors if the response is not successful
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Failed to sign up.");
+        return;
+      }
 
-      // Optionally, you could redirect the user or display a success message here
-      console.log('Signup successful:', response);
+      // If the sign-up is successful, parse the response
+      await response.json();
+      setSuccessMessage("Sign-up successful! You can now log in.");
+      // You can also handle tokens here if needed:
+      // const { refresh, access } = data;
     } catch (error) {
-      console.error('Error during signup:', error);
-      // Optionally, display an error message to the user
+      setErrorMessage(
+        "An error occurred while signing up. Please try again." + error
+      );
     }
   };
 
@@ -42,7 +68,7 @@ export default function SignUp() {
       <CardHeader>
         <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
-          Fill in your details to create a new account
+          Enter your details below to create a new account
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -53,25 +79,7 @@ export default function SignUp() {
               <Input
                 id="username"
                 type="text"
-                placeholder="Enter your username"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
+                placeholder="Your username"
                 required
               />
             </div>
@@ -80,7 +88,7 @@ export default function SignUp() {
               <Input
                 id="first_name"
                 type="text"
-                placeholder="Enter your first name"
+                placeholder="First Name"
                 required
               />
             </div>
@@ -89,7 +97,25 @@ export default function SignUp() {
               <Input
                 id="last_name"
                 type="text"
-                placeholder="Enter your last name"
+                placeholder="Last Name"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Enter your username"
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Your password"
                 required
               />
             </div>
@@ -97,9 +123,19 @@ export default function SignUp() {
               Sign Up
             </Button>
           </div>
+          {errorMessage && (
+            <p className="mt-4 text-center text-sm text-red-600">
+              {errorMessage}
+            </p>
+          )}
+          {successMessage && (
+            <p className="mt-4 text-center text-sm text-green-600">
+              {successMessage}
+            </p>
+          )}
           <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
-            <a href="#" className="underline">
+            Already have an account?{" "}
+            <a href="/login" className="underline">
               Log in
             </a>
           </div>
