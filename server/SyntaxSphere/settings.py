@@ -45,11 +45,11 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
-
-
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -150,3 +150,5 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,  # Enable token blacklisting
     'AUTH_HEADER_TYPES': ('Bearer',),  # Token type in the Authorization header
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
