@@ -45,17 +45,13 @@ export default function SignUp() {
       });
 
       if (!response.ok) {
-        // Handle errors if the response is not successful
         const errorData = await response.json();
         setErrorMessage(errorData.message || "Failed to sign up.");
         return;
       }
 
-      // If the sign-up is successful, parse the response
       await response.json();
       setSuccessMessage("Sign-up successful! You can now log in.");
-      // You can also handle tokens here if needed:
-      // const { refresh, access } = data;
     } catch (error) {
       setErrorMessage(
         "An error occurred while signing up. Please try again." + error
@@ -104,9 +100,9 @@ export default function SignUp() {
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
-                id="username"
-                type="text"
-                placeholder="Enter your username"
+                id="email"
+                type="email"
+                placeholder="m@example.com"
                 required
               />
             </div>
