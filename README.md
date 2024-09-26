@@ -1,3 +1,4 @@
+
 # SyntaxSphere Project
 
 ## Overview
@@ -195,9 +196,9 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
   }
   ```
 
-
-
 ## Installation
+
+### Backend
 1. Clone the repository:
    ```sh
    git clone https://github.com/ahmeddelattarr/SyntaxSphere.git
@@ -219,7 +220,22 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
    python manage.py runserver
    ```
 
+### Frontend
+1. Navigate to the frontend directory:
+   ```sh
+   cd client
+   ```
+2. Install the required dependencies:
+   ```sh
+   npm install
+   ```
+3. Start the development server:
+   ```sh
+   npm start
+   ```
+
 ## License
 MIT License
 
-\© 2024 Ahmed elattar
+© 2024 Ahmed elattar
+```
