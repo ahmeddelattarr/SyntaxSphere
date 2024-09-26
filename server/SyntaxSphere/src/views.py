@@ -68,6 +68,9 @@ class HandlingPostsViewSet(viewsets.ModelViewSet):
 	search_fields = ['title']
 	lookup_field='id'
 
+	def perform_create(self, serializer):
+		serializer.save(user=self.request.user)
+
 
 class LikesViewSet(viewsets.ModelViewSet):
 
