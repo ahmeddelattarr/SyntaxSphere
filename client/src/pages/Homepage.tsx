@@ -26,7 +26,7 @@ const Homepage = () => {
     fetchPosts();
   }, [navigate]);
   
-
+// @ts-ignore
   const PostsEl =<div className="flex flex-col gap-6">{posts.map((post) => (<Post key={post.id} post={post}/>))}</div> 
 
 
