@@ -35,7 +35,9 @@ export default function SignIn() {
         return;
       }
 
-      await response.json();
+      const data:any = await response.json();
+      localStorage.setItem('access',data.access);
+      localStorage.setItem('refresh',data.refresh);
       setSuccessMessage("Sign-in successful!");
     } catch (error) {
       setErrorMessage(
