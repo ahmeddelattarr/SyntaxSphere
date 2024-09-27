@@ -24,7 +24,7 @@ const Navbar = () => {
                     Create Post
                 </button>
                 <button
-                    className="bg-red-800 text-white px-4 py-2 rounded hover:bg-red-500"
+                    className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-500"
                     onClick={handleLogout}
                 >
                     Logout

@@ -27,14 +27,14 @@ const Homepage = () => {
   }, [navigate]);
   
 // @ts-ignore
-  const PostsEl =<div className="flex flex-col gap-6">{posts.map((post) => (<Post key={post.id} post={post}/>))}</div> 
+  const PostsEl =<div className="flex flex-col">{posts.map((post,i,posts) => (<Post isLast={i==posts.length-1} key={post.id} post={post}/>))}</div> 
 
 
 
   return (
     <div className="min-h-screen w-screen text-gray-200">
       <Navbar/>
-      <div className="container mx-auto p-6 ">
+      <div className="container mx-auto p-6">
         <div>
           {posts.length > 0 ? (
            PostsEl

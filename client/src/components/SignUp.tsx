@@ -54,7 +54,9 @@ export default function SignUp() {
 
       await response.json();
       setSuccessMessage("Sign-up successful! You can now log in.");
+      setTimeout(() => {
       navigate('/login')
+      }, 500);
     } catch (error) {
       setErrorMessage(
         "An error occurred while signing up. Please try again." + error

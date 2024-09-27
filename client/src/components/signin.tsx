@@ -7,7 +7,6 @@ import { useState } from "react";
 
 export default function SignIn() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const navigate = useNavigate()
 
@@ -80,9 +79,6 @@ export default function SignIn() {
             </Button>
             {errorMessage && (
               <div className="text-red-500 text-sm">{errorMessage}</div>
-            )}
-            {successMessage && (
-              <div className="text-green-500 text-sm">{successMessage}</div>
             )}
             <div className="mt-4 text-center text-sm">
             Don't have an account?{" "}
