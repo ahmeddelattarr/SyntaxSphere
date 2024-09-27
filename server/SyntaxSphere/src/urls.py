@@ -18,8 +18,7 @@ urlpatterns = [
     path('signout/', SignOutView.as_view(), name='sign-out'),
     path('posts/', post_list, name='post-list-create'),  # Combined list and create
     path('posts/<uuid:id>/', post_detail, name='post-detail-delete'),  # Combined detail and delete
+    path('posts/<uuid:id>/update/', HandlingPostsViewSet.as_view({'put': 'update'},name='post-update')),
     path('posts/<uuid:pk>/like/', LikesViewSet.as_view({'post': 'create'}), name='like-post'),
-    path('posts/<uuid:pk>/comments/', CommentsViewSet.as_view({'post': 'create', 'get': 'list'}), name='comment-create-list'),  # Allow GET method for comments
-    # Corrected to list
-     # Corrected typo
+    path('posts/<uuid:pk>/comments/', CommentsViewSet.as_view({'post': 'create', 'get': 'list'}), name='comment-create-list') ,# Allow GET method for comments
 ]
