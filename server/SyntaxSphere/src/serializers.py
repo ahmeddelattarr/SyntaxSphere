@@ -20,9 +20,13 @@ class SignInSerializer(serializers.Serializer):
 	password = serializers.CharField()
 
 class PostSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
     class Meta:
-        model=Posts
-        fields='__all__'
+        model = Posts
+        fields = ['id', 'title', 'url', 'user', 'posted_at', 'like_count']
+        read_only_fields = ['id', 'user', 'posted_at', 'like_count']
+
 
 class LikesSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.tsx";
+import {Link, useNavigate} from 'react-router-dom'
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button.tsx";
@@ -6,7 +7,8 @@ import { useState } from "react";
 
 export default function SignIn() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const navigate = useNavigate()
 
   // this is actually not the best way to handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -38,7 +40,7 @@ export default function SignIn() {
       const data:any = await response.json();
       localStorage.setItem('access',data.access);
       localStorage.setItem('refresh',data.refresh);
-      setSuccessMessage("Sign-in successful!");
+      navigate('/')
     } catch (error) {
       setErrorMessage(
         "An error occurred while signing in. Please try again." + error
@@ -78,9 +80,12 @@ export default function SignIn() {
             {errorMessage && (
               <div className="text-red-500 text-sm">{errorMessage}</div>
             )}
-            {successMessage && (
-              <div className="text-green-500 text-sm">{successMessage}</div>
-            )}
+            <div className="mt-4 text-center text-sm">
+            Don't have an account?{" "}
+            <Link to="/signup" className="underline">
+              Sign up
+            </Link>
+          </div>
           </div>
         </form>
       </CardContent>
