@@ -120,6 +120,23 @@ class CommentsViewSet(viewsets.ModelViewSet):
         post = get_object_or_404(Posts, id=post_id)
         serializer.save(user_id=self.request.user, post_id=post)
 
+class UserPostsViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = PostSerializer
+
+	def get_queryset(self):
+		username=self.kwargs.get('username')
+		user = get_object_or_404(User, username=username)
+
+		return Posts.objects.filter(user=user)
+
+
+
+
+
+
+
+
 
 
 
