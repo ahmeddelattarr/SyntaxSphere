@@ -1,4 +1,3 @@
-
 # SyntaxSphere Project
 
 ## Overview
@@ -95,6 +94,53 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
   ]
   ```
 
+#### Specific User Posts
+
+- **URL:** `/posts/users/<str:username>/`
+- **Method:** `GET`
+- **Description:** Retrieve all posts created by a specific user.
+- **Parameters:**
+  - `username` (string, required): The username of the user whose posts are to be retrieved.
+- **Response:**
+  - **Success (200 OK):** Returns a list of posts created by the specified user.
+   
+  - **Error (404 Not Found):** If the user with the specified username does not exist.
+    - **Content Example:**
+      ```json
+      {
+          "detail": "Not found."
+      }
+      ```
+- **Permissions:**
+  - Requires authentication.
+  - Only authenticated users can access this endpoint.
+- **Example Request:**
+  ```http
+  GET /posts/users/hobalala/
+  Authorization: Bearer <your-access-token>
+  ```
+- **Example Response:**
+  ```json
+  [
+      {
+          "id": "c616613b-1483-4d98-930d-688f7660a965",
+          "title": "Introduction to Python",
+          "url": "https://example.com/python-tutorial",
+          "user": "hhh",
+          "posted_at": "2024-09-26T11:55:36.523615Z",
+          "like_count": 0
+      },
+      {
+          "id": "c770a17c-6b82-40c5-85c0-136c9717ac7c",
+          "title": "JavaScript for Beginnerss",
+          "url": "https://example.com/js-for-beginnersss",
+          "user": "hhh",
+          "posted_at": "2024-09-26T11:57:26.744238Z",
+          "like_count": 0
+      }
+  ]
+  ```
+
 #### Create Post
 - **URL:** `/posts/`
 - **Method:** `POST`
@@ -140,65 +186,54 @@ SyntaxSphere is a Django-based project that provides user authentication, includ
 - **Description:** Delete a specific post by its ID.
 - **Response:** `HTTP 204 No Content` on success.
 
-  
+#### Update Post
+- **URL:** `/posts/<uuid:id>/update/`
+- **Method:** `PUT`
+- **Description:** Update an existing post.
+- **URL Parameters:**
+  - `id` (UUID): The unique identifier of the post to be updated.
+- **Request Body:**
+  - `title` (string): The new title of the post.
+  - `url` (string): The new URL of the post.
+- **Response:**
+  - **Success:**
+    - **Status Code:** `200 OK`
+    - **Body:** JSON object containing the updated post details.
+      ```json
+      {
+        "id": "uuid",
+        "title": "new title",
+        "url": "new url",
+        "user": "username",
+        "posted_at": "timestamp",
+        "like_count": 0
+      }
+      ```
+  - **Failure:**
+    - **Status Code:** `400 Bad Request` (if the request body is invalid)
+    - **Status Code:** `404 Not Found` (if the post with the given ID does not exist)
+    - **Status Code:** `403 Forbidden` (if the user is not authenticated or authorized to update the post)
+- **Example Request:**
+  ```http
+  PUT /posts/123e4567-e89b-12d3-a456-426614174000/update/
+  Content-Type: application/json
 
-
-### Update Post
-
-**URL:** `/posts/<uuid:id>/update/`
-
-**Method:** `PUT`
-
-**Description:** This endpoint allows authenticated users to update an existing post.
-
-**URL Parameters:**
-- `id` (UUID): The unique identifier of the post to be updated.
-
-**Request Body:**
-- `title` (string): The new title of the post.
-- `url` (string): The new URL of the post.
-
-**Response:**
-- **Success:** 
-  - **Status Code:** `200 OK`
-  - **Body:** JSON object containing the updated post details.
-    ```json
-    {
-      "id": "uuid",
-      "title": "new title",
-      "url": "new url",
-      "user": "username",
-      "posted_at": "timestamp",
-      "like_count": 0
-    }
-    ```
-- **Failure:**
-  - **Status Code:** `400 Bad Request` (if the request body is invalid)
-  - **Status Code:** `404 Not Found` (if the post with the given ID does not exist)
-  - **Status Code:** `403 Forbidden` (if the user is not authenticated or authorized to update the post)
-
-**Example Request:**
-```http
-PUT /posts/123e4567-e89b-12d3-a456-426614174000/update/
-Content-Type: application/json
-
-{
-  "title": "Updated Post Title",
-  "url": "https://newurl.com"
-}
-```
-
-**Example Response:**
-```json
-{
-  "id": "123e4567-e89b-12d3-a456-426614174000",
-  "title": "Updated Post Title",
-  "url": "https://newurl.com",
-  "user": "username",
-  "posted_at": "2023-10-01T12:34:56Z",
-  "like_count": 0
-}
-```
+  {
+    "title": "Updated Post Title",
+    "url": "https://newurl.com"
+  }
+  ```
+- **Example Response:**
+  ```json
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "title": "Updated Post Title",
+    "url": "https://newurl.com",
+    "user": "username",
+    "posted_at": "2023-10-01T12:34:56Z",
+    "like_count": 0
+  }
+  ```
 
 ### Like Management
 
@@ -298,4 +333,3 @@ Content-Type: application/json
 MIT License
 
 © 2024 Ahmed elattar
-```
