@@ -10,7 +10,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-black text-white py-4 px-6 flex justify-between items-center shadow-md">
+        <nav className="sticky top-0 left-0 w-full z-10 bg-black text-white py-4 px-6 flex justify-between items-center shadow-md">
             <h1 className="text-3xl font-bold">Syntax Sphere</h1>
             <div className="flex space-x-4">
                 <button
