@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
 import Post from "../components/ui/Post";
+import NewPostForm from "../components/ui/NewPostForm";
 
 const Homepage = () => {
   const [posts, setPosts] = useState([]);
+  const [addNewPost,SetAddNewPost] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,21 +23,26 @@ const Homepage = () => {
         navigate("/login");
       }
       const data = await response.json();
+      data.reverse();
       setPosts(data);
-    };
+    }; 
     fetchPosts();
-  }, [navigate]);
+  }, [navigate, addNewPost]);
   
+  const refreshTimeLine= ()=>{
+    SetAddNewPost(prevState=>!prevState);
+  }
 // @ts-ignore
   const PostsEl =<div className="flex flex-col">{posts.map((post,i,posts) => (<Post isLast={i==posts.length-1} key={post.id} post={post}/>))}</div> 
 
 
 
   return (
-    <div className="min-h-screen w-screen text-gray-200">
+    <div className="min-h-screen w-screen text-gray-200 bg-gray-800">
       <Navbar/>
       <div className="container mx-auto p-6">
         <div>
+          <NewPostForm refreshTimeLine={refreshTimeLine}/>
           {posts.length > 0 ? (
            PostsEl
           ) : (

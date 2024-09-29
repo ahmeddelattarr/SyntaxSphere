@@ -21,7 +21,7 @@ const Post: React.FC<PostProps> = ({ post, isLast }) => {
     const [nOfLikes,setNOfLikes] = useState(post.like_count);
     const navigate = useNavigate();
 
-    const classList = `cursor-pointer p-4 shadow-md border border-gray-900 ${!isLast && 'border-b-0'}`
+    const classList = `bg-gray-900 cursor-pointer p-4 shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`
 
     const viewCommentHandler = () => {
         alert("Placeholder");
@@ -67,7 +67,7 @@ const Post: React.FC<PostProps> = ({ post, isLast }) => {
                 </div>
             </div>
 
-            <p className="mt-3 text-white text-xl leading-relaxed">
+            <p className="mt-3 text-gray-300 text-xl leading-relaxed">
                 {post.title}
             </p>
             <div className="flex gap-4">
