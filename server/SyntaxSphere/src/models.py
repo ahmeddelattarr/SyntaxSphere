@@ -14,6 +14,8 @@ class Posts(models.Model):
 	user=models.ForeignKey(User,on_delete=CASCADE)
 	posted_at=models.DateTimeField(default=timezone.now)
 	like_count = models.PositiveIntegerField(default=0)
+	content = models.TextField()
+
 
 
 class Likes(models.Model):
