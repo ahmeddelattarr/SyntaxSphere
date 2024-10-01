@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage.tsx'
 import SignUpPage from './pages/SignUpPage.tsx'
 import Homepage from './pages/Homepage.tsx'
 import './index.css'
+import PostPage from './pages/PostPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "signup",
     element: <SignUpPage />
+  },
+  {
+    path: "post/:postId",
+    element: <PostPage/>
   }
 ]);
 
