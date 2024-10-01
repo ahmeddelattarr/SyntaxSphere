@@ -140,6 +140,16 @@ class UserLikesViewSet(viewsets.ModelViewSet):
 
 		return Likes.objects.filter(user_id=user)
 
+class UserCommentsViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = LikesSerializer
+
+	def get_queryset(self):
+		username=self.kwargs.get('username')
+		user = get_object_or_404(User, username=username)
+
+		return Comments.objects.filter(user_id=user)
+
 
 
 

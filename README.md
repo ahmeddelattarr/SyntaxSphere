@@ -82,10 +82,10 @@ Example Response (GET /posts/):
 
 ### Like Management
 
-| Endpoint | Method | Description | Request Body | Response |
-|----------|--------|-------------|--------------|----------|
-| `/posts/<uuid:pk>/like/` | POST | Like a specific post | N/A | Like object |
-| `/likes/<str:username>/` | GET | Retrieve posts liked by a specific user | N/A | Array of like objects |
+| Endpoint                      | Method | Description | Request Body | Response |
+|-------------------------------|--------|-------------|--------------|----------|
+| `/posts/<uuid:pk>/like/`      | POST | Like a specific post | N/A | Like object |
+| `users/<str:username>/likes/` | GET | Retrieve posts liked by a specific user | N/A | Array of like objects |
 
 Example Response (POST /posts/<uuid:pk>/like/):
 ```json
@@ -114,10 +114,11 @@ Example Response (GET /likes/<str:username>/):
 
 ### Comment Management
 
-| Endpoint | Method | Description | Request Body | Response |
-|----------|--------|-------------|--------------|----------|
-| `/posts/<uuid:pk>/comments/` | GET | Retrieve comments for a specific post | N/A | Array of comment objects |
-| `/posts/<uuid:pk>/comments/` | POST | Create a new comment for a specific post | `{"comment": "string"}` | Created comment object |
+| Endpoint                          | Method | Description                              | Request Body               | Response                 |
+|-----------------------------------|--------|------------------------------------------|----------------------------|--------------------------|
+| `/posts/<uuid:pk>/comments/`      | GET    | Retrieve comments for a specific post    | N/A                        | Array of comment objects |
+| `/posts/<uuid:pk>/comments/`      | POST   | Create a new comment for a specific post | `{"comment": "string"}`    | Created comment object   |
+| `/users/<str:username>/comments/` | GET    | Retrieve comments for a specific user    | N/A| Array of comments        |
 
 Example Response (GET /posts/<uuid:pk>/comments/):
 ```json

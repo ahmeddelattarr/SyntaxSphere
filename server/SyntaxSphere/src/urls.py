@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import SignUpView, SignInView, SignOutView, HandlingPostsViewSet, LikesViewSet, CommentsViewSet, \
-    UserPostsViewSet, UserLikesViewSet
+    UserPostsViewSet, UserLikesViewSet, UserCommentsViewSet
 from rest_framework.routers import SimpleRouter
 
 post_list = HandlingPostsViewSet.as_view({
@@ -23,5 +23,7 @@ urlpatterns = [
     path('posts/<uuid:id>/update/', HandlingPostsViewSet.as_view({'put': 'update'},name='post-update')),
     path('posts/<uuid:pk>/like/', LikesViewSet.as_view({'post': 'create'}), name='like-post'),
     path('posts/<uuid:pk>/comments/', CommentsViewSet.as_view({'post': 'create', 'get': 'list'}), name='comment-create-list') ,
-    path('likes/<str:username>/', UserLikesViewSet.as_view({'get': 'list'}), name='likes-list'),
+    path('users/<str:username>/likes/', UserLikesViewSet.as_view({'get': 'list'}), name='user-likes-list'),
+    path('users/<str:username>/comments/', UserCommentsViewSet.as_view({'get': 'list'}), name='user-comments-list')
+
 ]
