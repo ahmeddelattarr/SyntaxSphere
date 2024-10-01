@@ -31,7 +31,8 @@ class PostSerializer(serializers.ModelSerializer):
 class LikesSerializer(serializers.ModelSerializer):
     class Meta:
         model=Likes
-        fields='__all__'
+        fields=['id','user_id','post_id']
+        read_only_fields=['id','user_id','post_id']
 
 class CommentsSerializer(serializers.ModelSerializer):
     class Meta:

@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User, Posts, Likes, Comments
-from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer
+from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -130,7 +130,15 @@ class UserPostsViewSet(viewsets.ModelViewSet):
 
 		return Posts.objects.filter(user=user)
 
+class UserLikesViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = LikesSerializer
 
+	def get_queryset(self):
+		username=self.kwargs.get('username')
+		user = get_object_or_404(User, username=username)
+
+		return Likes.objects.filter(user_id=user)
 
 
 
