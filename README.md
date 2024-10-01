@@ -49,14 +49,15 @@ Example Response (Sign Up / Sign In):
 
 ### Post Management
 
-| Endpoint | Method | Description | Request Body | Response |
-|----------|--------|-------------|--------------|----------|
-| `/posts/` | GET | Retrieve all posts | N/A | Array of post objects |
-| `/posts/` | POST | Create a new post | `{"title": "string", "url": "string"}` | Created post object |
-| `/posts/<uuid:id>/` | GET | Retrieve a specific post | N/A | Post object |
-| `/posts/<uuid:id>/` | DELETE | Delete a specific post | N/A | HTTP 204 No Content |
-| `/posts/<uuid:id>/update/` | PUT | Update a specific post | `{"title": "string", "url": "string"}` | Updated post object |
+| Endpoint                       | Method | Description                       | Request Body | Response |
+|--------------------------------|--------|-----------------------------------|--------------|----------|
+| `/posts/`                      | GET | Retrieve all posts                | N/A | Array of post objects |
+| `/posts/`                      | POST | Create a new post                 | `{"title": "string", "url": "string"}` | Created post object |
+| `/posts/<uuid:id>/`            | GET | Retrieve a specific post          | N/A | Post object |
+| `/posts/<uuid:id>/`            | DELETE | Delete a specific post            | N/A | HTTP 204 No Content |
+| `/posts/<uuid:id>/update/`     | PUT | Update a specific post            | `{"title": "string", "url": "string"}` | Updated post object |
 | `/posts/users/<str:username>/` | GET | Retrieve posts by a specific user | N/A | Array of post objects |
+| `posts/?search=<title>`        | GET | search in posts via title         | N/A | Array of post objects |
 
 Example Response (GET /posts/):
 ```json
