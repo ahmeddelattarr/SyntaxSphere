@@ -35,10 +35,15 @@ class LikesSerializer(serializers.ModelSerializer):
         read_only_fields=['id','user_id','post_id']
 
 class CommentsSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+
     class Meta:
         model = Comments
-        fields = ['id', 'user_id', 'post_id', 'comment', 'posted_at']
-        read_only_fields = ['id', 'user_id', 'post_id', 'posted_at']
+        fields = ['id', 'user_id', 'post_id', 'comment', 'posted_at','username']
+        read_only_fields = ['id', 'user_id', 'post_id', 'posted_at','username']
+
+    def get_username(self, obj):
+        return obj.user_id.username
 
     def create(self, validated_data):
         request = self.context.get('request')
