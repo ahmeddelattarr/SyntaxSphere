@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import CommentIcon from "./icons/CommentIcon";
 import LikeIcon from "./icons/LikeIcon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface PostData {
     id: string;
@@ -16,15 +16,22 @@ interface PostData {
 interface PostProps {
     post: PostData;
     isLast: boolean;
+    isSingular: boolean
 }
 
-const Post: React.FC<PostProps> = ({ post, isLast }) => {
-    const [nOfLikes, setNOfLikes] = useState(post.like_count);
+const Post: React.FC<PostProps> = ({ post, isLast, isSingular }) => {
+    const [nOfLikes, setNOfLikes] = useState<number>();
     const navigate = useNavigate();
 
-    const classList = `bg-gray-900 cursor-pointer p-4 shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`
+    useEffect(()=>{
+        setNOfLikes(post.like_count);
+    },[post])
+
+    const classList = `bg-gray-900 cursor-pointer shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`
 
     const viewCommentHandler = () => {
+        if(isSingular)
+            return
         navigate('/post/'+post.id)
     }
 
@@ -50,6 +57,8 @@ const Post: React.FC<PostProps> = ({ post, isLast }) => {
     }
 
     const postOnClickHandler: React.EventHandler<React.MouseEvent<HTMLDivElement>> = (event) => {
+        if(isSingular)
+            return
         if ((event.target as HTMLElement).closest('.gap-4'))
             return;
         navigate('/post/'+post.id)
@@ -60,7 +69,7 @@ const Post: React.FC<PostProps> = ({ post, isLast }) => {
         <div
             onClick={postOnClickHandler}
             key={post.id}
-            className={`${classList} bg-gray-800 p-6 rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200`}
+            className={`${classList} p-6 rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200`}
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -85,13 +94,13 @@ const Post: React.FC<PostProps> = ({ post, isLast }) => {
                     <LikeIcon style="text-2xl fill-current stroke-0 inline mr-1 group-hover:fill-white transition-colors duration-200" />
                     <span className="text-sm">{nOfLikes}</span>
                 </div>
-                <div
+                {!isSingular&&<div
                     onClick={viewCommentHandler}
                     className="cursor-pointer flex items-center text-gray-500 space-x-1 group hover:text-white"
                 >
                     <CommentIcon style="text-2xl fill-current stroke-0 inline mr-1 group-hover:fill-white transition-colors duration-200" />
                     <span className="text-sm">View Comments</span>
-                </div>
+                </div>}
             </div>
         </div>
 
