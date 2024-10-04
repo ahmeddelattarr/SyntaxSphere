@@ -62,6 +62,7 @@ const Post: React.FC<PostProps> = ({ post, isLast, isSingular, reloadPage }) => 
             console.log(data);
         }
         sendComment();
+        setIsCommentFormVisible(false)
         reloadPage();
     };
 

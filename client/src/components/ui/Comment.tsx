@@ -6,6 +6,7 @@ interface CommentObj{
     post_id: string;
     posted_at: string;
     user_id: number;
+    username:string;
 }
 interface CommentProps{
     commentObj:CommentObj;
@@ -19,7 +20,7 @@ const Comment: React.FC<CommentProps> = ({commentObj}) => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <h2 className="text-white font-semibold text-md">{commentObj.user_id}</h2>
+          <h2 className="text-white font-semibold text-md">{commentObj.username}</h2>
           <p className="text-gray-500 text-sm">
             &#9679; {new Date(commentObj.posted_at).toLocaleDateString()}
           </p>

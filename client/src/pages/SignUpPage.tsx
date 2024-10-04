@@ -1,9 +1,10 @@
 import SignUp from "../components/SignUp";
+import SignUpContainer from "../components/ui/SignUpContainer";
 
 const SignUpPage = ()=>{
 
-    return <div className="w-96">
-        <SignUp/>
-    </div>    
+    return  <SignUpContainer>
+            <SignUp />
+        </SignUpContainer>   
 }
 export default SignUpPage;

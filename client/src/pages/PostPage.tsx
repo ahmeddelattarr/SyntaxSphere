@@ -16,6 +16,7 @@ interface Post {
 interface CommentObj {
     comment: string;
     id: string;
+    username:string
     post_id: string;
     posted_at: string;
     user_id: number;
@@ -25,7 +26,6 @@ const PostPage = () => {
     const { postId } = useParams()
     const [post, setPost] = useState<Post>();
     const [comments, setComments] = useState<CommentObj[]>();
-    const [reloadPage, SetReloadPage] = useState(false);
     const token = localStorage.getItem('access');
 
     const fetchComments = async () => {
@@ -75,7 +75,7 @@ const PostPage = () => {
     );
     return (
 
-        <div className="min-h-screen w-screen text-gray-200 bg-gray-800">
+        <div className="min-h-screen w-full text-gray-200 bg-gray-800">
             <Navbar />
             <div className="container mx-auto p-6 mt-86">
                 {/* @ts-ignore */}

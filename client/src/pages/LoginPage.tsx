@@ -1,11 +1,12 @@
-import SignIn from "../components/signin.tsx";
+import SignIn from "../components/SignIn.tsx";
+import SignUpContainer from "../components/ui/SignUpContainer.tsx";
 
 
 const LoginPage = () => {
     return (
-        <div className="w-96">
-            <SignIn/>
-        </div>
+        <SignUpContainer>
+            <SignIn />
+        </SignUpContainer>
     )
 }
 export default LoginPage;

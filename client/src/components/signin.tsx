@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.tsx";
 import {Link, useNavigate} from 'react-router-dom'
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Button } from "./ui/button.tsx";
+import { Input } from "./ui/input.tsx";
+import { Label } from "./ui/label.tsx";
+import { Button } from "./ui/Button.tsx";
 import { useState } from "react";
 
 export default function SignIn() {

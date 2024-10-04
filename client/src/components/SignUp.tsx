@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "./ui/button.tsx";
+import { Button } from "./ui/Button.tsx";
 import {useNavigate,Link} from "react-router-dom"
 import {
   Card,
@@ -67,7 +67,7 @@ export default function SignUp() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardTitle >Sign Up</CardTitle>
         <CardDescription>
           Enter your details below to create a new account
         </CardDescription>

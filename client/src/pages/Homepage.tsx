@@ -38,7 +38,7 @@ const Homepage = () => {
 
 
   return (
-    <div className="min-h-screen w-screen text-gray-200 bg-gray-800">
+    <div className="min-h-screen w-full text-gray-200 bg-gray-800">
       <Navbar/>
       <div className="container mx-auto p-6 mt-86">
         <div>
