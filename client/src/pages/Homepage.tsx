@@ -3,28 +3,40 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
 import Post from "../components/ui/Post";
 import NewPostForm from "../components/ui/NewPostForm";
+import { fetchWithToken } from "../lib/utils";
+
+interface PostData {
+    id: string;
+    title: string;
+    content: string;
+    url: string;
+    user: string;
+    posted_at: string;
+    like_count: number;
+}
+
+interface PostResponse {
+  previous:string|null;
+  next:string|null;
+  count:number;
+  results:PostData[];
+}
+
 
 const Homepage = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [addNewPost,SetAddNewPost] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("access");
     const fetchPosts = async () => {
-      const response = await fetch("http://localhost:8000/posts", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetchWithToken('posts/','GET')
       if (!response.ok) {
         navigate("/login");
       }
-      const data = await response.json();
-      data.reverse();
-      setPosts(data);
+      const data:PostResponse = await response.json();
+      console.log(data)
+      setPosts(data.results);
     }; 
     fetchPosts();
   }, [navigate, addNewPost]);
@@ -32,7 +44,6 @@ const Homepage = () => {
   const refreshTimeLine= ()=>{
     SetAddNewPost(prevState=>!prevState);
   }
-// @ts-ignore
   const PostsEl =<div className="flex flex-col">{posts.map((post,i,posts) => (<Post isLast={i==posts.length-1} key={post.id} post={post}/>))}</div> 
 
 

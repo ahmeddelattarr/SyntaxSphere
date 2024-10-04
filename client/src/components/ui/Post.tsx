@@ -16,11 +16,11 @@ interface PostData {
 interface PostProps {
     post: PostData;
     isLast: boolean;
-    isSingular: boolean;
-    reloadPage:()=>{}
+    isSingular?: boolean;
+    reloadPage?:()=>{}
 }
 
-const Post: React.FC<PostProps> = ({ post, isLast, isSingular, reloadPage }) => {
+const Post: React.FC<PostProps> = ({ post, isLast, isSingular, reloadPage=()=>{} }) => {
     const [nOfLikes, setNOfLikes] = useState<number>();
     const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
     const [commentText, setCommentText] = useState('');
