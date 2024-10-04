@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -63,8 +64,14 @@ class SignOutView(generics.CreateAPIView):
 		except AttributeError:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class CustomPagination(LimitOffsetPagination):
+	default_limit = 10
+	max_limit = 100
+
+
 class HandlingPostsViewSet(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
+	pagination_class = CustomPagination
 
 	queryset = Posts.objects.all()
 	serializer_class = PostSerializer
