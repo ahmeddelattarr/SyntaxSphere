@@ -15,6 +15,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
+    path:"/:postPage",
+    element:<Homepage/>
+  },
+  {
     path: "login",
     element: <LoginPage />
   },
