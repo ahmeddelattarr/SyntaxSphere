@@ -4,11 +4,12 @@ from django.contrib.auth import authenticate
 from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User, Posts, Likes, Comments
-from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer
+from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -63,10 +64,16 @@ class SignOutView(generics.CreateAPIView):
 		except AttributeError:
 			return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class CustomPagination(LimitOffsetPagination):
+	default_limit = 10
+	max_limit = 100
+
+
 class HandlingPostsViewSet(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
+	pagination_class = CustomPagination
 
-	queryset = Posts.objects.all()
+	queryset = Posts.objects.all().order_by('-posted_at')
 	serializer_class = PostSerializer
 	filter_backends = [filters.SearchFilter]
 	search_fields = ['title']
@@ -113,12 +120,47 @@ class CommentsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post_id = self.kwargs.get('pk')
-        return Comments.objects.filter(post_id=post_id)
+        return Comments.objects.filter(post_id=post_id).order_by('-posted_at')
 
     def perform_create(self, serializer):
         post_id = self.kwargs.get('pk')
         post = get_object_or_404(Posts, id=post_id)
         serializer.save(user_id=self.request.user, post_id=post)
+
+class UserPostsViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = PostSerializer
+
+	def get_queryset(self):
+		username=self.kwargs.get('username')
+		user = get_object_or_404(User, username=username)
+
+		return Posts.objects.filter(user=user)
+
+class UserLikesViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = LikesSerializer
+
+	def get_queryset(self):
+		username=self.kwargs.get('username')
+		user = get_object_or_404(User, username=username)
+
+		return Likes.objects.filter(user_id=user)
+
+class UserCommentsViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = LikesSerializer
+
+	def get_queryset(self):
+		username=self.kwargs.get('username')
+		user = get_object_or_404(User, username=username)
+
+		return Comments.objects.filter(user_id=user)
+
+
+
+
+
 
 
 

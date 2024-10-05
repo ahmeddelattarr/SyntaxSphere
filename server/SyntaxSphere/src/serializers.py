@@ -24,20 +24,26 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Posts
-        fields = ['id', 'title', 'url', 'user', 'posted_at', 'like_count']
+        fields = ['id', 'title', 'url', 'user', 'posted_at', 'like_count','content']
         read_only_fields = ['id', 'user', 'posted_at', 'like_count']
 
 
 class LikesSerializer(serializers.ModelSerializer):
     class Meta:
         model=Likes
-        fields='__all__'
+        fields=['id','user_id','post_id']
+        read_only_fields=['id','user_id','post_id']
 
 class CommentsSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+
     class Meta:
         model = Comments
-        fields = ['id', 'user_id', 'post_id', 'comment', 'posted_at']
-        read_only_fields = ['id', 'user_id', 'post_id', 'posted_at']
+        fields = ['id', 'user_id', 'post_id', 'comment', 'posted_at','username']
+        read_only_fields = ['id', 'user_id', 'post_id', 'posted_at','username']
+
+    def get_username(self, obj):
+        return obj.user_id.username
 
     def create(self, validated_data):
         request = self.context.get('request')

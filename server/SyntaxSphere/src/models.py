@@ -10,10 +10,12 @@ import uuid
 class Posts(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	title=models.CharField(max_length=50)
-	url=models.URLField()
+	url=models.URLField(null=True,blank=True)
 	user=models.ForeignKey(User,on_delete=CASCADE)
 	posted_at=models.DateTimeField(default=timezone.now)
 	like_count = models.PositiveIntegerField(default=0)
+	content = models.TextField()
+
 
 
 class Likes(models.Model):
@@ -27,6 +29,7 @@ class Comments(models.Model):
 	post_id = models.ForeignKey(Posts, on_delete=CASCADE)
 	comment=models.CharField(max_length=255)
 	posted_at=models.DateTimeField(default=timezone.now)
+
 
 
 

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button } from "./ui/button.tsx";
+import { Button } from "./ui/Button.tsx";
+import {useNavigate,Link} from "react-router-dom"
 import {
   Card,
   CardContent,
@@ -13,6 +14,7 @@ import { Label } from "./ui/label";
 export default function SignUp() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // this is actually not the best way to handle form submission any
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,6 +54,9 @@ export default function SignUp() {
 
       await response.json();
       setSuccessMessage("Sign-up successful! You can now log in.");
+      setTimeout(() => {
+      navigate('/login')
+      }, 500);
     } catch (error) {
       setErrorMessage(
         "An error occurred while signing up. Please try again." + error
@@ -62,7 +67,7 @@ export default function SignUp() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardTitle >Sign Up</CardTitle>
         <CardDescription>
           Enter your details below to create a new account
         </CardDescription>
@@ -131,9 +136,9 @@ export default function SignUp() {
           )}
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <a href="/login" className="underline">
+            <Link to="/login" className="underline">
               Log in
-            </a>
+            </Link>
           </div>
         </form>
       </CardContent>
