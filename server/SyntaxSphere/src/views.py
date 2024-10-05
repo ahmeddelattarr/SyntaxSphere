@@ -73,7 +73,7 @@ class HandlingPostsViewSet(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
 	pagination_class = CustomPagination
 
-	queryset = Posts.objects.all()
+	queryset = Posts.objects.all().order_by('-posted_at')
 	serializer_class = PostSerializer
 	filter_backends = [filters.SearchFilter]
 	search_fields = ['title']
@@ -120,7 +120,7 @@ class CommentsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         post_id = self.kwargs.get('pk')
-        return Comments.objects.filter(post_id=post_id)
+        return Comments.objects.filter(post_id=post_id).order_by('-posted_at')
 
     def perform_create(self, serializer):
         post_id = self.kwargs.get('pk')
