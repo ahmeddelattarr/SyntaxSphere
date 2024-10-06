@@ -2,25 +2,16 @@ import { useNavigate } from "react-router-dom";
 import CommentIcon from "./icons/CommentIcon";
 import LikeIcon from "./icons/LikeIcon";
 import { useEffect, useState } from "react";
-
-interface PostData {
-    id: string;
-    title: string;
-    content: string;
-    url: string;
-    user: string;
-    posted_at: string;
-    like_count: number;
-}
+import { PostData } from "../../types/post-interfaces";
 
 interface PostProps {
     post: PostData;
-    isLast: boolean;
+    isLast?: boolean;
     isSingular?: boolean;
-    reloadPage?:()=>{}
+    refreshComments?: ()=>void
 }
 
-const Post: React.FC<PostProps> = ({ post, isLast, isSingular, reloadPage=()=>{} }) => {
+const Post: React.FC<PostProps> = ({ post, isLast=false, isSingular=false, refreshComments }) => {
     const [nOfLikes, setNOfLikes] = useState<number>();
     const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
     const [commentText, setCommentText] = useState('');
@@ -62,8 +53,8 @@ const Post: React.FC<PostProps> = ({ post, isLast, isSingular, reloadPage=()=>{}
             console.log(data);
         }
         sendComment();
+        refreshComments!();
         setIsCommentFormVisible(false)
-        reloadPage();
     };
 
     const commentButtonHandler = () => {

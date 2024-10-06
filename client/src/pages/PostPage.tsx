@@ -1,72 +1,43 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
 import { useEffect, useState } from "react";
 import Post from "../components/ui/Post";
 import Comment from "../components/ui/Comment";
+import { PostData } from "../types/post-interfaces";
+import { fetchWithToken } from "../lib/utils";
+import { CommentData } from "../types/comment-interfaces";
 
-interface Post {
-    content: string;
-    id: string;
-    title: string;
-    url: string;
-    posted_at: string;
-    like_count: number
-}
-
-interface CommentObj {
-    comment: string;
-    id: string;
-    username:string
-    post_id: string;
-    posted_at: string;
-    user_id: number;
-}
 
 const PostPage = () => {
-    const { postId } = useParams()
-    const [post, setPost] = useState<Post>();
-    const [comments, setComments] = useState<CommentObj[]>();
-    const token = localStorage.getItem('access');
+    const postId = useParams().postId!;
+    const [post, setPost] = useState<PostData>();
+    const [comments, setComments] = useState<CommentData[]>();
+    const [commentSubmitted,setCommentSubmitted] = useState(false);
+    const navigate = useNavigate();
 
-    const fetchComments = async () => {
-        const response = await fetch(`http://localhost:8000/posts/${postId}/comments`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        })
-        if (!response.ok) {
-            alert("error");
-            return;
-        }
-        const data = await response.json();
-        data.reverse();
-        setComments([...data]);
+    const refreshComments = ()=>{
+        setCommentSubmitted(prevState=>!prevState);
     }
+
     useEffect(() => {
+        const fetchComments = async () => {
+            const response = await fetchWithToken(`/posts/${postId}/comments`, 'GET')
+            if (response.status == 401)
+                navigate('/');
+            const data: CommentData[] = await response.json();
+            setComments([...data]);
+        }
         const fetchPost = async () => {
-            const response = await fetch(`http://localhost:8000/posts/${postId}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            if (!response.ok) {
-                alert("error");
-                return;
-            }
-            const data = await response.json()
+            const response = await fetchWithToken(`/posts/${postId}/`, 'GET');
+            if (response.status == 401)
+                navigate('/');
+            const data: PostData = await response.json();
             setPost(data);
         }
         fetchPost();
         fetchComments();
-    }, [])
+    }, [navigate, postId,commentSubmitted])
 
-    const refreshPage = () => {
-        fetchComments();
-    }
 
     const CommentsListEl = comments?.length ? (
         <div>{comments.map((el) => <Comment key={el.id} commentObj={el} />)}</div>
@@ -78,8 +49,7 @@ const PostPage = () => {
         <div className="min-h-screen w-full text-gray-200 bg-gray-800">
             <Navbar />
             <div className="container mx-auto p-6 mt-86">
-                {/* @ts-ignore */}
-                <Post reloadPage={refreshPage} isSingular={true} post={{ id: postId, ...post }} />
+                {post && <Post refreshComments={refreshComments} isSingular={true} post={post} />}
                 <h3 className="p-2 text-xl font-semibold text-white mt-8 mb-4 border-b border-gray-600 pb-2">
                     Comments
                 </h3>
