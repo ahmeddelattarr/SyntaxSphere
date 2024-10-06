@@ -51,7 +51,7 @@ const Homepage = () => {
       setPosts(data.results);
     };
     fetchPosts();
-  }, [addNewPost]);
+  }, [addNewPost, currentPage, navigate]);
 
   const refreshTimeLine = () => {
     SetAddNewPost(prevState => !prevState);
