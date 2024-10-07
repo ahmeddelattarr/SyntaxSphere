@@ -12,10 +12,10 @@ const PostPage = () => {
     const { data: post } = useFetchWithToken<PostData>(`/posts/${postId}/`, 'GET');
     const { data: commentResponse, refresh: refreshComments } = useFetchWithToken<CommentResponse>(`/posts/${postId}/comments/`, `GET`);
 
-    const handleSeeMore = ()=>{
-        const currentLength= commentResponse?.results.length||0;
-        refreshComments(`?limit=${currentLength+10}`)
-    }
+    const handleSeeMore = () => {
+        const currentLength = commentResponse?.results.length || 0;
+        refreshComments(`?limit=${currentLength + 10}`);
+    };
 
     const CommentsListEl = commentResponse?.results.length ? (
         <div>{commentResponse.results.map((el) => <Comment key={el.id} commentObj={el} />)}</div>
