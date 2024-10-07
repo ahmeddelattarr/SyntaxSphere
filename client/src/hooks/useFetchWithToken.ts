@@ -8,6 +8,7 @@ const useFetchWithToken = <T>(
 	body: unknown = undefined
 ) => {
 	const [data, setData] = useState<T>();
+    const [optionalQuery,setOptionalQuery]= useState('')
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [triggerRefresh, setTriggerRefresh] = useState(false);
@@ -16,7 +17,7 @@ const useFetchWithToken = <T>(
 
 	const fetchData = useCallback(async () => {
 		setLoading(true);
-		const response = await fetchWithToken(link, method, body);
+		const response = await fetchWithToken(link+optionalQuery, method, body);
 		if (!response.ok) {
 			if (response.status === 401) navigate("/");
 			setLoading(false);
@@ -26,13 +27,15 @@ const useFetchWithToken = <T>(
 		const data:T = await response.json();
 		setData(data);
 		setLoading(false);
-	}, [body, link, method, navigate]);
+	}, [body, link, method, navigate, optionalQuery]);
 
 	useEffect(() => {
 		fetchData();
 	}, [fetchData, triggerRefresh]);
 
-	const refresh = () => {
+	const refresh = (optionalUrl="") => {
+        if(optionalUrl)
+            setOptionalQuery(optionalUrl);
 		setTriggerRefresh((prev) => !prev);
 	};
 
