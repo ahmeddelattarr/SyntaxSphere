@@ -1,46 +1,24 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
-import { useEffect, useState } from "react";
 import Post from "../components/ui/Post";
 import Comment from "../components/ui/Comment";
 import { PostData } from "../types/post-interfaces";
-import { fetchWithToken } from "../lib/utils";
-import { CommentData } from "../types/comment-interfaces";
+import { CommentResponse } from "../types/comment-interfaces";
+import useFetchWithToken from "../hooks/useFetchWithToken";
 
 
 const PostPage = () => {
     const postId = useParams().postId!;
-    const [post, setPost] = useState<PostData>();
-    const [comments, setComments] = useState<CommentData[]>();
-    const [commentSubmitted,setCommentSubmitted] = useState(false);
-    const navigate = useNavigate();
+    const { data: post } = useFetchWithToken<PostData>(`/posts/${postId}/`, 'GET');
+    const { data: commentResponse, refresh: refreshComments } = useFetchWithToken<CommentResponse>(`/posts/${postId}/comments/`, `GET`);
 
-    const refreshComments = ()=>{
-        setCommentSubmitted(prevState=>!prevState);
-    }
+    const handleSeeMore = () => {
+        const currentLength = commentResponse?.results.length || 0;
+        refreshComments(`?limit=${currentLength + 10}`);
+    };
 
-    useEffect(() => {
-        const fetchComments = async () => {
-            const response = await fetchWithToken(`/posts/${postId}/comments`, 'GET')
-            if (response.status == 401)
-                navigate('/');
-            const data: CommentData[] = await response.json();
-            setComments([...data]);
-        }
-        const fetchPost = async () => {
-            const response = await fetchWithToken(`/posts/${postId}/`, 'GET');
-            if (response.status == 401)
-                navigate('/');
-            const data: PostData = await response.json();
-            setPost(data);
-        }
-        fetchPost();
-        fetchComments();
-    }, [navigate, postId,commentSubmitted])
-
-
-    const CommentsListEl = comments?.length ? (
-        <div>{comments.map((el) => <Comment key={el.id} commentObj={el} />)}</div>
+    const CommentsListEl = commentResponse?.results.length ? (
+        <div>{commentResponse.results.map((el) => <Comment key={el.id} commentObj={el} />)}</div>
     ) : (
         <div className="text-gray-400 text-center mt-4">There are no comments yet.</div>
     );
@@ -54,9 +32,19 @@ const PostPage = () => {
                     Comments
                 </h3>
                 {CommentsListEl}
+                {commentResponse?.next && (
+                    <div className="text-center mt-6">
+                        <button
+                            className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-6 rounded-full shadow-sm transition-all duration-200"
+                            onClick={handleSeeMore}
+                        >
+                            See More
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default PostPage;
