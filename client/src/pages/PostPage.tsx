@@ -1,43 +1,16 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
-import { useEffect, useState } from "react";
 import Post from "../components/ui/Post";
 import Comment from "../components/ui/Comment";
 import { PostData } from "../types/post-interfaces";
-import { fetchWithToken } from "../lib/utils";
 import { CommentData } from "../types/comment-interfaces";
+import useFetchWithToken from "../hooks/useFetchWithToken";
 
 
 const PostPage = () => {
     const postId = useParams().postId!;
-    const [post, setPost] = useState<PostData>();
-    const [comments, setComments] = useState<CommentData[]>();
-    const [commentSubmitted,setCommentSubmitted] = useState(false);
-    const navigate = useNavigate();
-
-    const refreshComments = ()=>{
-        setCommentSubmitted(prevState=>!prevState);
-    }
-
-    useEffect(() => {
-        const fetchComments = async () => {
-            const response = await fetchWithToken(`/posts/${postId}/comments`, 'GET')
-            if (response.status == 401)
-                navigate('/');
-            const data: CommentData[] = await response.json();
-            setComments([...data]);
-        }
-        const fetchPost = async () => {
-            const response = await fetchWithToken(`/posts/${postId}/`, 'GET');
-            if (response.status == 401)
-                navigate('/');
-            const data: PostData = await response.json();
-            setPost(data);
-        }
-        fetchPost();
-        fetchComments();
-    }, [navigate, postId,commentSubmitted])
-
+    const { data: post } = useFetchWithToken<PostData>(`/posts/${postId}/`, 'GET');
+    const { data: comments, refresh: refreshComments } = useFetchWithToken<CommentData[]>(`/posts/${postId}/comments`, `GET`);
 
     const CommentsListEl = comments?.length ? (
         <div>{comments.map((el) => <Comment key={el.id} commentObj={el} />)}</div>
@@ -56,7 +29,7 @@ const PostPage = () => {
                 {CommentsListEl}
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default PostPage;
