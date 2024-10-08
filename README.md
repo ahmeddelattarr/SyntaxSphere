@@ -39,7 +39,7 @@ SyntaxSphere is a Django-based web application that provides a platform for user
 | `/signout/`                        | POST   | Log out the authenticated user | `{"refresh": "string"}`                                                                                          | HTTP 205 Reset Content on success          |
 | `/accounts/github/login/`          | GET    | Initiate GitHub OAuth login    | N/A                                                                                                              | Redirects to GitHub                        |
 | `/accounts/github/login/callback/` | GET    | Handle GitHub OAuth callback   | N/A                                                                                                              | Redirects to app with auth result          |
-| `/token/refresh/`                  | POST   | Handle acsess token expiration | {"refresh":"string }                                                                                             | {"access": "string"}                                         |
+| `/token/refresh/`                  | POST   | Handle acsess token expiration | `{"refresh":"string }`                                                                                             | `{"refresh": "string", "access": "string"}`                                        |
 
 
 Example Response (Sign Up / Sign In):
