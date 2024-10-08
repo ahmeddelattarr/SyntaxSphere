@@ -21,3 +21,15 @@ export const fetchWithToken = (
 	});
 	return response;
 };
+
+export const fetchTokenWithAccess = () => {
+	const refresh = localStorage.getItem("refresh");
+	const response = fetch(`http://localhost:8000/token/refresh/`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ refresh: refresh }),
+	});
+	return response;
+};

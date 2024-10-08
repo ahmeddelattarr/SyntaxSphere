@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { fetchWithToken } from "../lib/utils";
+import { fetchTokenWithAccess, fetchWithToken } from "../lib/utils";
 import { useNavigate } from "react-router-dom";
 
 const useFetchWithToken = <T>(
@@ -19,8 +19,19 @@ const useFetchWithToken = <T>(
 		setLoading(true);
 		const response = await fetchWithToken(link + optionalQuery, method, body);
 		if (!response.ok) {
-			if (response.status === 401) navigate("/login");
-   
+			if (response.status === 401) {
+				const newTokenRes = await fetchTokenWithAccess();
+				if (!newTokenRes.ok) {
+					navigate("/login");
+					return;
+				}
+				const newTokenResponseData = await newTokenRes.json();
+				const newAccessToken = newTokenResponseData.access;
+				localStorage.setItem("access", newAccessToken);
+				localStorage.setItem("refresh", newTokenResponseData.refresh);
+				fetchData();
+				return;
+			}
 			setLoading(false);
 			setError(response.statusText);
 			return;
