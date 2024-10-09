@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import { fetchWithToken } from "../../lib/utils";
 
 const Navbar = () => {
     const navigate = useNavigate();
 
-    //TODO
     const handleLogout = () => {
+        const refresh = localStorage.getItem("refresh");
+        fetchWithToken(`signout/`, "POST", { refresh: refresh });
+        localStorage.removeItem("refresh");
         localStorage.removeItem("access");
         navigate("/login");
     };
@@ -21,7 +24,7 @@ const Navbar = () => {
                 </button>
             </div>
         </nav>
-    )
-}
+    );
+};
 
 export default Navbar;

@@ -115,6 +115,7 @@ class LikesViewSet(viewsets.ModelViewSet):
 class CommentsViewSet(viewsets.ModelViewSet):
     serializer_class = CommentsSerializer
     permission_classes = (IsAuthenticated,)
+    pagination_class = CustomPagination
 
 
 
