@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "./ui/Button.tsx";
-import {useNavigate,Link} from "react-router-dom"
+import { Button } from "./ui/common/Button.tsx";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -8,31 +8,48 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card.tsx";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import InputField from "./ui/common/InputField.tsx";
+import { API_URL } from "../../config/apiConfig.ts";
 
-export default function SignUp() {
+interface errorResponse {
+  username: string[];
+}
+
+const SignUp: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>('');
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
-  // this is actually not the best way to handle form submission any
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setErrorMessage('');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const username = (event.target as any).username.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const email = (event.target as any).email.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const password = (event.target as any).password.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const firstName = (event.target as any).first_name.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const lastName = (event.target as any).last_name.value;
+    if (username.trim().length < 1) {
+      setErrorMessage('Username must be at least 1 character long.');
+      return;
+    }
+
+    if (firstName.trim().length < 4) {
+      setErrorMessage('First Name must be at least 4 characters long.');
+      return;
+    }
+    if (lastName.trim().length < 4) {
+      setErrorMessage('Last Name must be at least 4 characters long.');
+      return;
+    }
+
+    if (password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long.');
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:8000/signup/", {
+      const response = await fetch(`${API_URL}/signup/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,27 +64,26 @@ export default function SignUp() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message || "Failed to sign up.");
+        const errorData: errorResponse = await response.json();
+        setErrorMessage(errorData.username[0] || "Failed to sign up.");
         return;
       }
 
       await response.json();
       setSuccessMessage("Sign-up successful! You can now log in.");
       setTimeout(() => {
-      navigate('/login')
+        navigate('/login');
       }, 500);
     } catch (error) {
-      setErrorMessage(
-        "An error occurred while signing up. Please try again." + error
-      );
+      setErrorMessage("An error occurred while signing up. Please try again.");
+      console.error(error);
     }
   };
 
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle >Sign Up</CardTitle>
+        <CardTitle>Sign Up</CardTitle>
         <CardDescription>
           Enter your details below to create a new account
         </CardDescription>
@@ -75,73 +91,69 @@ export default function SignUp() {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="Your username"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="first_name">First Name</Label>
-              <Input
-                id="first_name"
-                type="text"
-                placeholder="First Name"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="last_name">Last Name</Label>
-              <Input
-                id="last_name"
-                type="text"
-                placeholder="Last Name"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Your password"
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full">
+            <InputField
+              label="Username"
+              id="username"
+              type="text"
+              placeholder="Your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+            <InputField
+              label="First Name"
+              id="first_name"
+              type="text"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+            <InputField
+              label="Last Name"
+              id="last_name"
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+            <InputField
+              label="Email"
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <InputField
+              label="Password"
+              id="password"
+              type="password"
+              placeholder="Your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" variant="sign">
               Sign Up
             </Button>
           </div>
           {errorMessage && (
-            <p className="mt-4 text-center text-sm text-red-600">
-              {errorMessage}
-            </p>
+            <p className="mt-4 text-center text-sm text-red-600">{errorMessage}</p>
           )}
           {successMessage && (
-            <p className="mt-4 text-center text-sm text-green-600">
-              {successMessage}
-            </p>
+            <p className="mt-4 text-center text-sm text-green-600">{successMessage}</p>
           )}
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to="/login" className="underline">
-              Log in
-            </Link>
+            <Link to="/login" className="underline">Log in</Link>
           </div>
         </form>
       </CardContent>
     </Card>
   );
-}
+};
+
+export default SignUp;

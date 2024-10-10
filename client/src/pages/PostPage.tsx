@@ -11,6 +11,7 @@ const PostPage = () => {
     const postId = useParams().postId!;
     const { data: post } = useFetchWithToken<PostData>(`/posts/${postId}/`, 'GET');
     const { data: commentResponse, refresh: refreshComments } = useFetchWithToken<CommentResponse>(`/posts/${postId}/comments/`, `GET`);
+    console.log(commentResponse);
 
     const handleSeeMore = () => {
         const currentLength = commentResponse?.results.length || 0;

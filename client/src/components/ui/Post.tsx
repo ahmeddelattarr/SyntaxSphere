@@ -8,10 +8,10 @@ interface PostProps {
     post: PostData;
     isLast?: boolean;
     isSingular?: boolean;
-    refreshComments?: ()=>void
+    refreshComments?: () => void;
 }
 
-const Post: React.FC<PostProps> = ({ post, isLast=false, isSingular=false, refreshComments }) => {
+const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, refreshComments }) => {
     const [nOfLikes, setNOfLikes] = useState<number>();
     const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
     const [commentText, setCommentText] = useState('');
@@ -21,9 +21,9 @@ const Post: React.FC<PostProps> = ({ post, isLast=false, isSingular=false, refre
 
     useEffect(() => {
         setNOfLikes(post.like_count);
-    }, [post])
+    }, [post]);
 
-    const classList = `bg-gray-900 cursor-pointer shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`
+    const classList = `bg-gray-900 cursor-pointer shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`;
 
     const handleCommentSubmit = (e: React.FormEvent) => {
 
@@ -36,7 +36,7 @@ const Post: React.FC<PostProps> = ({ post, isLast=false, isSingular=false, refre
         setCommentText('');
 
         const sendComment = async () => {
-            const token = localStorage.getItem('access')
+            const token = localStorage.getItem('access');
             const response = await fetch(`http://localhost:8000/posts/${post.id}/comments/`, {
                 method: 'POST',
                 headers: {
@@ -46,28 +46,27 @@ const Post: React.FC<PostProps> = ({ post, isLast=false, isSingular=false, refre
                 body: JSON.stringify({
                     "comment": commentText
                 })
-            })
+            });
             if (!response.ok)
                 alert('error');
-            const data = await response.json();
-            console.log(data);
-        }
+            await response.json();
+            refreshComments!();
+        };
         sendComment();
-        refreshComments!();
-        setIsCommentFormVisible(false)
+        setIsCommentFormVisible(false);
     };
 
     const commentButtonHandler = () => {
         if (isSingular) {
             setIsCommentFormVisible(!isCommentFormVisible);
-            return
+            return;
         }
-        navigate('/post/' + post.id)
-    }
+        navigate('/post/' + post.id);
+    };
 
     const toggleLikeHandler = () => {
         const likePost = async () => {
-            const token = localStorage.getItem('access')
+            const token = localStorage.getItem('access');
             const response = await fetch(`http://localhost:8000/posts/${post.id}/like/`, {
                 method: "POST",
                 headers: {
@@ -82,17 +81,17 @@ const Post: React.FC<PostProps> = ({ post, isLast=false, isSingular=false, refre
             const { likes_count: likesCount } = await response.json();
             setNOfLikes(likesCount);
 
-        }
+        };
         likePost();
-    }
+    };
 
     const postOnClickHandler: React.EventHandler<React.MouseEvent<HTMLDivElement>> = (event) => {
         if (isSingular)
-            return
+            return;
         if ((event.target as HTMLElement).closest('.gap-4'))
             return;
-        navigate('/post/' + post.id)
-    }
+        navigate('/post/' + post.id);
+    };
 
 
     return (

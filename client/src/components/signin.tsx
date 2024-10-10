@@ -1,50 +1,56 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card.tsx";
-import {Link, useNavigate} from 'react-router-dom'
-import { Input } from "./ui/input.tsx";
-import { Label } from "./ui/label.tsx";
-import { Button } from "./ui/Button.tsx";
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from "./ui/common/Button.tsx";
 import { useState } from "react";
+import { API_URL } from "../../config/apiConfig.ts";
+import InputField from "./ui/common/InputField.tsx";
+import GithubSignInIcon from "./ui/icons/GithubSignInIcon.tsx";
 
-export default function SignIn() {
+interface SignInResponse {
+  access: string;
+  refresh: string;
+}
+
+const SignIn: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-
-  // this is actually not the best way to handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (username.trim().length < 1) {
+      setErrorMessage('Username must be at least 1 character long.');
+      return;
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const username = (event.target as any).username.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const password = (event.target as any).password.value;
+    if (password.length < 8) {
+      setErrorMessage('Password must be at least 8 characters long.');
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:8000/signin/", {
-        method: "POST",
+      const response = await fetch(`${API_URL}/signin/`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        setErrorMessage(errorData.message || "Failed to sign in.");
+        setErrorMessage(errorData.message || 'Failed to sign in.');
         return;
       }
 
-      const data:any = await response.json();
-      localStorage.setItem('access',data.access);
-      localStorage.setItem('refresh',data.refresh);
-      navigate('/')
+      const data: SignInResponse = await response.json();
+      localStorage.setItem('access', data.access);
+      localStorage.setItem('refresh', data.refresh);
+      navigate('/');
     } catch (error) {
-      setErrorMessage(
-        "An error occurred while signing in. Please try again." + error
-      );
+      setErrorMessage('An error occurred while signing in. Please try again.');
+      console.error(error);
     }
   };
 
@@ -56,39 +62,41 @@ export default function SignIn() {
       <CardContent>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                placeholder="Your username"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Your password"
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full">
+            <InputField
+              label="Username"
+              id="username"
+              type="text"
+              placeholder="Your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+            <InputField
+              label="Password"
+              id="password"
+              type="password"
+              placeholder="Your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" variant="sign">
               Sign In
             </Button>
+            <GithubSignInIcon />
             {errorMessage && (
               <div className="text-red-500 text-sm">{errorMessage}</div>
             )}
             <div className="mt-4 text-center text-sm">
-            Don't have an account?{" "}
-            <Link to="/signup" className="underline">
-              Sign up
-            </Link>
-          </div>
+              Don't have an account?{' '}
+              <Link to="/signup" className="underline">
+                Sign up
+              </Link>
+            </div>
           </div>
         </form>
       </CardContent>
     </Card>
   );
-}
+};
+export default SignIn;
