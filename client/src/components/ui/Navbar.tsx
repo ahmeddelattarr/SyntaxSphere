@@ -4,6 +4,10 @@ import { fetchWithToken } from "../../lib/utils";
 const Navbar = () => {
     const navigate = useNavigate();
 
+    const homePageClickHandler = ()=>{
+        navigate('/')
+    }
+
     const handleLogout = () => {
         const refresh = localStorage.getItem("refresh");
         fetchWithToken(`signout/`, "POST", { refresh: refresh });
@@ -14,7 +18,7 @@ const Navbar = () => {
 
     return (
         <nav className="sticky top-0 left-0 z-10 bg-black text-white py-4 px-6 flex justify-between items-center shadow-md ">
-            <h1 className="text-3xl font-bold">Syntax Sphere</h1>
+            <button onClick={homePageClickHandler} className="text-3xl font-bold">Syntax Sphere</button>
             <div className="flex space-x-4">
                 <button
                     className="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-500"

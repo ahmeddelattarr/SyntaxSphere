@@ -3,6 +3,8 @@ import CommentIcon from "./icons/CommentIcon";
 import LikeIcon from "./icons/LikeIcon";
 import { useEffect, useState } from "react";
 import { PostData } from "../../types/post-interfaces";
+import CommentForm from "./CommentForm";
+import { fetchWithToken } from "../../lib/utils";
 
 interface PostProps {
     post: PostData;
@@ -26,7 +28,6 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
     const classList = `bg-gray-900 cursor-pointer shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`;
 
     const handleCommentSubmit = (e: React.FormEvent) => {
-
         e.preventDefault();
         if (!commentText.trim()) {
             setErrorMessage('Comment cannot be empty.');
@@ -36,17 +37,7 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
         setCommentText('');
 
         const sendComment = async () => {
-            const token = localStorage.getItem('access');
-            const response = await fetch(`http://localhost:8000/posts/${post.id}/comments/`, {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    "comment": commentText
-                })
-            });
+            const response = await fetchWithToken(`posts/${post.id}/comments/`, "POST", { comment: commentText });
             if (!response.ok)
                 alert('error');
             await response.json();
@@ -66,14 +57,7 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
 
     const toggleLikeHandler = () => {
         const likePost = async () => {
-            const token = localStorage.getItem('access');
-            const response = await fetch(`http://localhost:8000/posts/${post.id}/like/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await fetchWithToken(`posts/${post.id}/like/`, "POST");
             if (!response.ok) {
                 alert("smth went wrong");
                 return;
@@ -136,32 +120,7 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
 
 
             </div>
-            {isCommentFormVisible && (
-                <div className="mt-4 bg-gray-900 p-4 rounded-lg border border-gray-700 ">
-                    <form onSubmit={handleCommentSubmit} className="space-y-4">
-                        <textarea
-                            className="w-full bg-gray-800 text-gray-300 text-base p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            rows={3}
-                            placeholder="Write a comment..."
-                            value={commentText}
-                            onChange={(e) => setCommentText(e.target.value)}
-                        ></textarea>
-
-                        {errorMessage && (
-                            <p className="text-red-500 text-sm">{errorMessage}</p>
-                        )}
-
-                        <div className="flex justify-end">
-                            <button
-                                type="submit"
-                                className="bg-blue-500 hover:bg-blue-400 text-white py-2 px-4 rounded-full shadow-sm transition-all duration-200"
-                            >
-                                Submit
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            )}
+            {isCommentFormVisible && <CommentForm commentText={commentText} setCommentText={setCommentText} errorMessage={errorMessage} onSubmit={handleCommentSubmit} />}
         </>
 
 

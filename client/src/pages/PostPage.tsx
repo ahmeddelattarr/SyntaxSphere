@@ -5,13 +5,13 @@ import Comment from "../components/ui/Comment";
 import { PostData } from "../types/post-interfaces";
 import { CommentResponse } from "../types/comment-interfaces";
 import useFetchWithToken from "../hooks/useFetchWithToken";
+import { Button } from "../components/ui/common/Button";
 
 
 const PostPage = () => {
     const postId = useParams().postId!;
     const { data: post } = useFetchWithToken<PostData>(`/posts/${postId}/`, 'GET');
     const { data: commentResponse, refresh: refreshComments } = useFetchWithToken<CommentResponse>(`/posts/${postId}/comments/`, `GET`);
-    console.log(commentResponse);
 
     const handleSeeMore = () => {
         const currentLength = commentResponse?.results.length || 0;
@@ -35,12 +35,12 @@ const PostPage = () => {
                 {CommentsListEl}
                 {commentResponse?.next && (
                     <div className="text-center mt-6">
-                        <button
-                            className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-6 rounded-full shadow-sm transition-all duration-200"
+                        <Button
+                            variant="blue"
                             onClick={handleSeeMore}
                         >
                             See More
-                        </button>
+                        </Button>
                     </div>
                 )}
             </div>

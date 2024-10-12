@@ -1,13 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button } from './common/Button';
 
 interface PaginationProps {
     totalPosts: number;
     currentPage: number;
-    refreshTimeLine: ()=>void
+    refreshTimeLine: () => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalPosts, currentPage,refreshTimeLine  }) => {
+const Pagination: React.FC<PaginationProps> = ({ totalPosts, currentPage, refreshTimeLine }) => {
     const navigate = useNavigate();
 
     const postsPerPage = 10;
@@ -15,7 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPosts, currentPage,refresh
 
     const handlePageChange = (page: number) => {
         if (page >= 1 && page <= totalPages) {
-            navigate(`/${page}`)
+            navigate(`/${page}`);
             refreshTimeLine();
         }
     };
@@ -57,30 +58,28 @@ const Pagination: React.FC<PaginationProps> = ({ totalPosts, currentPage,refresh
     return (
         <div className="flex flex-wrap justify-center content-center border border-gray-700 p-6 bg-gray-900 text-white rounded-lg shadow-md">
             <div className="flex justify-between items-center w-full">
+
                 {/* Previous Button */}
-                <button
-                    className={`${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-                        } bg-transparent border border-gray-700 text-gray-300 py-2 px-4 rounded-full hover:bg-gray-700 transition-colors duration-200`}
+                <Button
+                    variant="pagination"
                     disabled={currentPage === 1}
                     onClick={() => handlePageChange(currentPage - 1)}
                 >
                     Previous
-                </button>
+                </Button>
 
                 {/* Page Buttons */}
                 <div className="flex flex-wrap justify-center space-x-2">
                     {getPageNumbers().map((page, index) =>
-                        typeof page === 'number' ? (
-                            <button
+                        typeof page === "number" ? (
+                            <Button
                                 key={index}
-                                className={`${currentPage === page
-                                        ? 'bg-blue-500 text-white cursor-default'
-                                        : 'bg-transparent text-gray-300 border-gray-700 hover:bg-gray-700'
-                                    } border py-2 px-4 rounded-full transition-colors duration-200`}
-                                onClick={currentPage===page?()=>{}:() => handlePageChange(page)}
+                                variant={currentPage === page ? "blue" : "pagination"}
+                                disabled={currentPage === page}
+                                onClick={() => handlePageChange(page)}
                             >
                                 {page}
-                            </button>
+                            </Button>
                         ) : (
                             <span key={index} className="text-gray-500 py-2 px-4">
                                 {page}
@@ -90,19 +89,17 @@ const Pagination: React.FC<PaginationProps> = ({ totalPosts, currentPage,refresh
                 </div>
 
                 {/* Next Button */}
-                <button
-                    className={`${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-                        } bg-transparent border border-gray-700 text-gray-300 py-2 px-4 rounded-full hover:bg-gray-700 transition-colors duration-200`}
+                <Button
+                    variant="pagination"
                     disabled={currentPage === totalPages}
                     onClick={() => handlePageChange(currentPage + 1)}
                 >
                     Next
-                </button>
+                </Button>
             </div>
         </div>
-
-
     );
 };
+
 
 export default Pagination;
