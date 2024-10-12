@@ -4,7 +4,6 @@ import { Button } from "./ui/common/Button.tsx";
 import { useState } from "react";
 import { API_URL } from "../../config/apiConfig.ts";
 import InputField from "./ui/common/InputField.tsx";
-import GithubSignInIcon from "./ui/icons/GithubSignInIcon.tsx";
 
 interface SignInResponse {
   access: string;
@@ -83,7 +82,7 @@ const SignIn: React.FC = () => {
             <Button type="submit" variant="sign">
               Sign In
             </Button>
-            <GithubSignInIcon />
+            {/* <GithubSignInIcon /> */}
             {errorMessage && (
               <div className="text-red-500 text-sm">{errorMessage}</div>
             )}
