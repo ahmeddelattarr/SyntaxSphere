@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import SignUpView, SignInView, SignOutView, HandlingPostsViewSet, LikesViewSet, CommentsViewSet, \
-    UserPostsViewSet, UserLikesViewSet, UserCommentsViewSet
-from rest_framework.routers import SimpleRouter
+    UserPostsViewSet, UserLikesViewSet, UserCommentsViewSet, ProfileViewSet
+
 from rest_framework_simplejwt.views import TokenRefreshView
 
 post_list = HandlingPostsViewSet.as_view({
@@ -26,6 +26,9 @@ urlpatterns = [
     path('posts/<uuid:pk>/like/', LikesViewSet.as_view({'post': 'create'}), name='like-post'),
     path('posts/<uuid:pk>/comments/', CommentsViewSet.as_view({'post': 'create', 'get': 'list'}), name='comment-create-list') ,
     path('users/<str:username>/likes/', UserLikesViewSet.as_view({'get': 'list'}), name='user-likes-list'),
-    path('users/<str:username>/comments/', UserCommentsViewSet.as_view({'get': 'list'}), name='user-comments-list')
+    path('users/<str:username>/comments/', UserCommentsViewSet.as_view({'get': 'list'}), name='user-comments-list'),
+    path('profiles/',ProfileViewSet.as_view({'post': 'create'}),name='profile-data-creating'),
+    #TODO:
+    #path('profiles/<int:user_id>/',ProfileViewSet.as_view({'get':'retrieve'}),name='profile-data-retrieving')
 
 ]

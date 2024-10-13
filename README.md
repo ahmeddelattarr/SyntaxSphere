@@ -143,7 +143,11 @@ Example Response (GET /posts/<uuid:pk>/comments/):
   }
 ]
 ```
+### Profile Management
 
+| Endpoint     | Method | Description                          | Request Body                                           | Response                                                                      |
+|--------------|--------|--------------------------------------|--------------------------------------------------------|-------------------------------------------------------------------------------|
+| `/profiles/` | post   | create a bio and github account user | `{"user_id":int,"bio":string,"git_hub_account:string"` | `{"user_id":int,"bio":"string","git_hub_account":"string","git_hub_url":url}` |
 ## Installation
 
 ### Backend Setup
