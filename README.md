@@ -60,7 +60,7 @@ Example Response (Sign Up / Sign In):
 | `/posts/<uuid:id>/`            | DELETE | Delete a specific post            | N/A | HTTP 204 No Content |
 | `/posts/<uuid:id>/update/`     | PUT | Update a specific post            | `{"title": "string", "url": "string"}` | Updated post object |
 | `/posts/users/<str:username>/` | GET | Retrieve posts by a specific user | N/A | Array of post objects |
-| `posts/?search=<title>`        | GET | search in posts via title         | N/A | Array of post objects |
+| `/posts/?search=<title>`        | GET | search in posts via title         | N/A | Array of post objects |
 
 Example Response (GET /posts/):
 ```json
