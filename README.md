@@ -147,7 +147,11 @@ Example Response (GET /posts/<uuid:pk>/comments/):
 
 | Endpoint     | Method | Description                          | Request Body                                           | Response                                                                      |
 |--------------|--------|--------------------------------------|--------------------------------------------------------|-------------------------------------------------------------------------------|
-| `/profiles/` | post   | create a bio and github account user | `{"user_id":int,"bio":string,"git_hub_account:string"` | `{"user_id":int,"bio":"string","git_hub_account":"string","git_hub_url":url}` |
+| `/profiles/` | POST   | Create a bio and GitHub account user | `{"user_id": int, "bio": string, "git_hub_account": string}` | `{"user_id": int, "bio": "string", "git_hub_account": "string", "git_hub_url": "url"}` |
+| `/profiles/{user_id}/` | GET    | Retrieve a specific user profile     | N/A                                                    | `{"user_id": int, "bio": "string", "git_hub_account": "string", "git_hub_url": "url"}` |
+| `/profiles/{user_id}/` | PUT    | Update bio and GitHub account        | `{"bio": string, "git_hub_account": string}`            | `{"user_id": int, "bio": "string", "git_hub_account": "string", "git_hub_url": "url"}` |
+| `/profiles/{user_id}/` | DELETE | Delete a specific user profile       | N/A                                                    | `204 No Content`                                                              |
+
 ## Installation
 
 ### Backend Setup

@@ -1,6 +1,7 @@
 
 
 from django.contrib.auth import authenticate
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
@@ -166,6 +167,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		return Profile.objects.filter(user_id=self.request.user)
 
+	def list(self, request, *args, **kwargs):
+		raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
 
 
 
