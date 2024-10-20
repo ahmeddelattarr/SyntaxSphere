@@ -21,10 +21,11 @@ class SignInSerializer(serializers.Serializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
+    user_id = serializers.ReadOnlyField(source='user.id')
 
     class Meta:
         model = Posts
-        fields = ['id', 'title', 'url', 'user', 'posted_at', 'like_count','content']
+        fields = ['id', 'title', 'url', 'user','user_id','posted_at', 'like_count','content']
         read_only_fields = ['id', 'user', 'posted_at', 'like_count']
 
 
