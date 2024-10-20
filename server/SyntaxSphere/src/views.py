@@ -1,6 +1,7 @@
 
 
 from django.contrib.auth import authenticate
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
@@ -8,8 +9,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import User, Posts, Likes, Comments
-from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer
+from .models import User, Posts, Likes, Comments, Profile
+from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer,ProfileSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -157,6 +158,18 @@ class UserCommentsViewSet(viewsets.ModelViewSet):
 		user = get_object_or_404(User, username=username)
 
 		return Comments.objects.filter(user_id=user)
+
+class ProfileViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = ProfileSerializer
+	lookup_field = 'user_id'
+
+	def get_queryset(self):
+		return Profile.objects.filter(user_id=self.kwargs['user_id'])
+
+	def list(self, request, *args, **kwargs):
+		raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
+
 
 
 
