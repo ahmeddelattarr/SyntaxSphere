@@ -165,7 +165,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 	lookup_field = 'user_id'
 
 	def get_queryset(self):
-		return Profile.objects.filter(user_id=self.request.user)
+		return Profile.objects.filter(user_id=self.kwargs['user_id'])
 
 	def list(self, request, *args, **kwargs):
 		raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
