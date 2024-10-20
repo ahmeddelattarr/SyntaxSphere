@@ -34,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "search",
     element: <SearchPage />
+  },
+  {
+    path: "user/:userId",
+    element: <div>asdf</div>
   }
 ]);
 
