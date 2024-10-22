@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { PostData } from "../../types/post-interfaces";
 import CommentForm from "./CommentForm";
 import { fetchWithToken } from "../../lib/utils";
+import Username from "./common/Username";
 
 interface PostProps {
     post: PostData;
@@ -25,7 +26,7 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
         setNOfLikes(post.like_count);
     }, [post]);
 
-    const classList = `bg-gray-900 cursor-pointer shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`;
+    const classList = `bg-gray-900 ${isSingular ? 'select-none' : 'cursor-pointer'} shadow-md border border-gray-700 ${!isLast && 'border-b-0'}`;
 
     const handleCommentSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -72,7 +73,7 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
     const postOnClickHandler: React.EventHandler<React.MouseEvent<HTMLDivElement>> = (event) => {
         if (isSingular)
             return;
-        if ((event.target as HTMLElement).closest('.gap-4'))
+        if ((event.target as HTMLElement).closest('.gap-4') || (event.target as HTMLElement).tagName === 'H2')
             return;
         navigate('/post/' + post.id);
     };
@@ -87,18 +88,21 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
             >
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        <h2 className="text-white font-semibold text-lg">{post.user}</h2>
+                        <Username userId={post.user_id}>{post.user}</Username>
                         <p className="text-gray-500 text-sm">
                             &#9679; {new Date(post.posted_at).toLocaleDateString()}
                         </p>
                     </div>
                 </div>
 
-                <h3 className="text-gray-100 text-xl font-bold mt-4">{post.title}</h3>
+                <h3 className="text-gray-100 text-xl font-bold mt-4 select-text">{post.title}</h3>
 
-                <p className="text-gray-300 text-base leading-relaxed mt-2">
+                <p className="text-gray-300 text-base leading-relaxed mt-2 select-text">
                     {post.content}
                 </p>
+                {isSingular && <a href={post.url} className="select-text hover:underline cursor-pointer" target="_blank">
+                    {post.url}
+                </a>}
 
                 <div className="flex gap-4 mt-4 border-t border-gray-700 pt-3">
                     <div

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Posts,Likes,Comments
+from .models import Posts, Likes, Comments, Profile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,10 +21,11 @@ class SignInSerializer(serializers.Serializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
+    user_id = serializers.ReadOnlyField(source='user.id')
 
     class Meta:
         model = Posts
-        fields = ['id', 'title', 'url', 'user', 'posted_at', 'like_count','content']
+        fields = ['id', 'title', 'url', 'user','user_id','posted_at', 'like_count','content']
         read_only_fields = ['id', 'user', 'posted_at', 'like_count']
 
 
@@ -52,6 +53,18 @@ class CommentsSerializer(serializers.ModelSerializer):
         validated_data['user_id'] = request.user
         validated_data['post_id'] = post
         return super().create(validated_data)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    git_hub_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = ['user_id', 'bio', 'git_hub_account', 'git_hub_url']
+
+    def get_git_hub_url(self, obj):
+        return obj.git_hub_url
+
 
 
 
