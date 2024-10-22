@@ -1,5 +1,5 @@
 import React from "react";
-import Username from "./common/UserName";
+import Username from "./common/Username";
 
 interface CommentObj {
   comment: string;

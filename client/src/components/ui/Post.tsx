@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { PostData } from "../../types/post-interfaces";
 import CommentForm from "./CommentForm";
 import { fetchWithToken } from "../../lib/utils";
-import Username from "./common/UserName";
+import Username from "./common/Username";
 
 interface PostProps {
     post: PostData;

@@ -160,17 +160,16 @@ class UserCommentsViewSet(viewsets.ModelViewSet):
 		return Comments.objects.filter(user_id=user)
 
 class ProfileViewSet(viewsets.ModelViewSet):
-	permission_classes = (IsAuthenticated,)
-	serializer_class = ProfileSerializer
-	lookup_field = 'user_id'
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProfileSerializer
+    lookup_field = 'user_id'
 
-	def get_queryset(self):
-		return Profile.objects.filter(user_id=self.kwargs['user_id'])
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return Profile.objects.filter(user_id=user_id)
 
-	def list(self, request, *args, **kwargs):
-		raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
-
-
+    def list(self, request, *args, **kwargs):
+        raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
 
 
 
