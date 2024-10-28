@@ -1,18 +1,19 @@
 import React from "react";
+import Username from "./common/Username";
 
-interface CommentObj{
-    comment: string;
-    id: string;
-    post_id: string;
-    posted_at: string;
-    user_id: number;
-    username:string;
+interface CommentObj {
+  comment: string;
+  id: string;
+  post_id: string;
+  posted_at: string;
+  user_id: number;
+  username: string;
 }
-interface CommentProps{
-    commentObj:CommentObj;
+interface CommentProps {
+  commentObj: CommentObj;
 }
 
-const Comment: React.FC<CommentProps> = ({commentObj}) => {
+const Comment: React.FC<CommentProps> = ({ commentObj }) => {
   return (
     <div
       key={commentObj.id}
@@ -20,7 +21,7 @@ const Comment: React.FC<CommentProps> = ({commentObj}) => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <h2 className="text-white font-semibold text-md">{commentObj.username}</h2>
+          <Username userId={commentObj.user_id}>{commentObj.username}</Username>
           <p className="text-gray-500 text-sm">
             &#9679; {new Date(commentObj.posted_at).toLocaleDateString()}
           </p>

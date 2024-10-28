@@ -8,6 +8,7 @@ import Homepage from './pages/Homepage.tsx';
 import './index.css';
 import PostPage from './pages/PostPage.tsx';
 import SearchPage from './pages/SearchPage.tsx';
+import UserPage from './pages/UserPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
   },
   {
     path: "user/:userId",
-    element: <div>asdf</div>
+    element: <UserPage/>
   }
 ]);
 
