@@ -60,10 +60,15 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['user_id', 'bio', 'git_hub_account', 'git_hub_url']
+        fields = ['user_id','username', 'bio', 'git_hub_account', 'git_hub_url']
 
     def get_git_hub_url(self, obj):
         return obj.git_hub_url
+
+    def create(self, validated_data):
+        user=self.context['request'].user
+        validated_data['user_id']=user
+        return super().create(validated_data)
 
 
 

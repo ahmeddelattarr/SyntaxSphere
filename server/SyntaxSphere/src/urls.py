@@ -30,7 +30,7 @@ urlpatterns = [
     path('posts/<uuid:pk>/comments/', CommentsViewSet.as_view({'post': 'create', 'get': 'list'}), name='comment-create-list') ,
     path('users/<str:username>/likes/', UserLikesViewSet.as_view({'get': 'list'}), name='user-likes-list'),
     path('users/<str:username>/comments/', UserCommentsViewSet.as_view({'get': 'list'}), name='user-comments-list'),
-    path('profiles/',include(router.urls)),
+    path('profiles/<str:username>/',ProfileViewSet.as_view({'get':'retrieve','put':'update','delete':'destroy','post':'create'})),
 
 
 ]
