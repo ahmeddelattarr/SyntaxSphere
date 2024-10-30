@@ -171,6 +171,14 @@ class ProfileViewSet(viewsets.ModelViewSet):
 	def list(self, request, *args, **kwargs):
 		raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
 
+	def perform_update(self, serializer):
+		# If username is being updated, ensure it's unique
+		if 'username' in self.request.data:
+			new_username = self.request.data['username']
+			if User.objects.filter(username=new_username).exclude(id=self.request.user.id).exists():
+				raise serializers.ValidationError({'username': 'This username is already taken.'})
+		serializer.save()
+
 
 
 

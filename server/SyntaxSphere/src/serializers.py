@@ -11,8 +11,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User(**validated_data)
-        user.set_password(validated_data['password'])  # Hash the password
+        user.set_password(validated_data['password'])
         user.save()
+
+        # Create profile with same username
+        Profile.objects.create(
+            user_id=user,
+            username=user.username
+        )
         return user
 
 class SignInSerializer(serializers.Serializer):
@@ -61,14 +67,24 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ['user_id','username', 'bio', 'git_hub_account', 'git_hub_url']
+        read_only_fields =['user_id']
 
     def get_git_hub_url(self, obj):
         return obj.git_hub_url
 
     def create(self, validated_data):
-        user=self.context['request'].user
-        validated_data['user_id']=user
+        user = self.context['request'].user
+        validated_data['user_id'] = user
+        validated_data['username'] = user.username  # Ensure username matches user
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if 'username' in validated_data:
+            # Update the User model's username as well
+            user = instance.user_id
+            user.username = validated_data['username']
+            user.save()
+        return super().update(instance, validated_data)
 
 
 
