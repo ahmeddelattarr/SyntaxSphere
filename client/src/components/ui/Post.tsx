@@ -19,7 +19,6 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
     const [isCommentFormVisible, setIsCommentFormVisible] = useState(false);
     const [commentText, setCommentText] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -73,8 +72,10 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
     const postOnClickHandler: React.EventHandler<React.MouseEvent<HTMLDivElement>> = (event) => {
         if (isSingular)
             return;
-        if ((event.target as HTMLElement).closest('.gap-4') || (event.target as HTMLElement).tagName === 'H2')
+        if ((event.target as HTMLElement).closest('.gap-4') || (event.target as HTMLElement).tagName === 'H2') {
+            navigate(`/user/${post.user}`);
             return;
+        }
         navigate('/post/' + post.id);
     };
 
