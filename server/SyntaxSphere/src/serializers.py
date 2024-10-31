@@ -36,10 +36,20 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class LikesSerializer(serializers.ModelSerializer):
+    post_content=serializers.SerializerMethodField()
+    username=serializers.SerializerMethodField()
+
     class Meta:
         model=Likes
-        fields=['id','user_id','post_id']
+        fields=['id','user_id','post_id','post_content','username']
         read_only_fields=['id','user_id','post_id']
+
+    def get_post_content(self,obj):
+        return obj.post_id.content
+
+    def get_username(self,obj):
+        return obj.user_id.username
+
 
 class CommentsSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()

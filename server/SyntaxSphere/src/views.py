@@ -151,7 +151,7 @@ class UserLikesViewSet(viewsets.ModelViewSet):
 
 class UserCommentsViewSet(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
-	serializer_class = LikesSerializer
+	serializer_class = CommentsSerializer
 
 	def get_queryset(self):
 		username=self.kwargs.get('username')
