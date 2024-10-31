@@ -5,14 +5,20 @@ import { UserData } from "../types/user-interface";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import UserStatsPanel from "../components/ui/UserStatsPanel";
-// import { PostResponse } from "../types/post-interfaces";
+import { PostData } from "../types/post-interfaces";
+import Post from "../components/ui/Post";
+import { CommentData } from "../types/comment-interfaces";
+import Comment from "../components/ui/Comment";
 
 
 const UserPage = () => {
-    const userId = useParams().userId!;
+    const user_name = useParams().userId!;
     const [activePanel, setActivePanel] = useState<"posts" | "comments" | "likes">("posts");
-    const { data: user, error, loading } = useFetchWithToken<UserData>(`profiles/${userId}/`, "GET");
-    // const {error,loading} = useFetchWithToken<PostResponse>(`/posts/users/`)
+    const { data: user, error, loading } = useFetchWithToken<UserData>(`profiles/${user_name}/`, "GET");
+    const { data: posts } = useFetchWithToken<PostData[]>(`/posts/users/${user_name}`, 'GET');
+    const { data: comments } = useFetchWithToken<CommentData[]>(`/users/${user_name}/comments`, 'GET');
+    const { data: likes } = useFetchWithToken<PostData[]>(`/users/${user_name}/likes`, 'GET');
+    console.log(comments);
 
     const handleShowPosts = () => setActivePanel("posts");
     const handleShowComments = () => setActivePanel("comments");
@@ -39,6 +45,24 @@ const UserPage = () => {
             </div>
         );
     }
+
+    let elList;
+
+    const setElList = () => {
+        switch (activePanel) {
+            case 'posts':
+                elList = posts && <div className="flex flex-col">{posts.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={post} />))}</div>;
+                break;
+            case 'comments':
+                elList = comments && <div className="flex flex-col">{comments.map((comment, i) => <Comment commentObj={comment} key={i}/>)}</div> 
+            break;
+            case 'likes':
+                elList = likes && <div className="flex flex-col">{likes.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={post} />))}</div>;
+                break;
+        }
+
+    };
+    setElList();
 
     return (
         <div className="min-h-screen w-full text-gray-200 bg-gray-800">
@@ -69,6 +93,7 @@ const UserPage = () => {
                         onShowLikes={handleShowLikes}
                     />
                 </div>
+                {elList}
             </div>
 
 
