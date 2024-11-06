@@ -3,13 +3,16 @@ import { useNavigate } from "react-router-dom";
 
 interface UsernameProps {
     children: ReactNode;
-    userId: number;
+    username: string;
+    disable:boolean|undefined
 }
 
-const Username: React.FC<UsernameProps> = ({ children, userId }) => {
+const Username: React.FC<UsernameProps> = ({ children, username,disable=false }) => {
     const navigate = useNavigate();
     const usernameClickHandler = () => {
-        navigate(`/user/${userId}`);
+        if(disable)
+            return;
+        navigate(`/user/${username}`);
     };
     return <h2 className="text-white font-semibold text-lg cursor-pointer hover:underline" onClick={usernameClickHandler}>
         {children}

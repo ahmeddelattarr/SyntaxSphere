@@ -70,12 +70,13 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
     };
 
     const postOnClickHandler: React.EventHandler<React.MouseEvent<HTMLDivElement>> = (event) => {
-        if (isSingular)
-            return;
-        if ((event.target as HTMLElement).closest('.gap-4') || (event.target as HTMLElement).tagName === 'H2') {
+        //TODO fix bug here
+        if ((event.target as HTMLElement).tagName === 'H2') {
             navigate(`/user/${post.user}`);
             return;
         }
+        if(isSingular&&(event.target as HTMLElement).closest('.cursor-pointer'))
+            return;
         navigate('/post/' + post.id);
     };
 
@@ -89,7 +90,7 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
             >
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        <Username userId={post.user_id}>{post.user}</Username>
+                        <Username disable={false} username={post.user}>{post.user}</Username>
                         <p className="text-gray-500 text-sm">
                             &#9679; {new Date(post.posted_at).toLocaleDateString()}
                         </p>

@@ -18,7 +18,6 @@ const UserPage = () => {
     const { data: posts } = useFetchWithToken<PostData[]>(`/posts/users/${user_name}`, 'GET');
     const { data: comments } = useFetchWithToken<CommentData[]>(`/users/${user_name}/comments`, 'GET');
     const { data: likes } = useFetchWithToken<PostData[]>(`/users/${user_name}/likes`, 'GET');
-    console.log(comments);
 
     const handleShowPosts = () => setActivePanel("posts");
     const handleShowComments = () => setActivePanel("comments");
@@ -54,10 +53,10 @@ const UserPage = () => {
                 elList = posts && <div className="flex flex-col">{posts.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={post} />))}</div>;
                 break;
             case 'comments':
-                elList = comments && <div className="flex flex-col">{comments.map((comment, i) => <Comment commentObj={comment} key={i}/>)}</div> 
+                elList = comments && <div className="flex flex-col">{comments.map((comment, i) => <Comment userPage={true} commentObj={comment} key={i}/>)}</div> 
             break;
             case 'likes':
-                elList = likes && <div className="flex flex-col">{likes.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={post} />))}</div>;
+                elList = likes && <div className="flex flex-col">{likes.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={{...post, id:post.post_id}} />))}</div>;
                 break;
         }
 
@@ -80,7 +79,7 @@ const UserPage = () => {
                             href={user.git_hub_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-block flex w-fit items-center text-white bg-blue-500 px-4 py-2 rounded-full font-semibold hover:bg-blue-600 transition-colors"
+                            className="flex w-fit items-center text-white bg-blue-500 px-4 py-2 rounded-full font-semibold hover:bg-blue-600 transition-colors"
                         >
                             <GitHubLogoIcon className="inline-block mr-2" />
                             Visit GitHub Profile

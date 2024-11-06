@@ -7,6 +7,7 @@ export interface PostData {
 	posted_at: string;
 	like_count: number;
 	user_id:number;
+	post_id:string;
 }
 
 export interface PostResponse {
