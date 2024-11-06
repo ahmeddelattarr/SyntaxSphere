@@ -55,6 +55,16 @@ class LikesSerializer(serializers.ModelSerializer):
     def get_username(self,obj):
         return obj.user_id.username
 
+    def get_title(self,obj):
+        return obj.post_id.title
+
+    def get_posted_at(self,obj):
+        return obj.post_id.posted_at
+
+    def get_like_count(self,obj):
+        return obj.post_id.like_count
+
+
 
 class CommentsSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
