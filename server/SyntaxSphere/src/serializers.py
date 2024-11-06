@@ -46,8 +46,8 @@ class LikesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=Likes
-        fields=['id','user_id','post_id','post_content','username','title','posted_at','like_count']
-        read_only_fields=['id','user_id','post_id','post_content','username','title','posted_at','like_count']
+        fields=['id','user_id','post_id','content','user','title','posted_at','like_count']
+        read_only_fields=['id','user_id','post_id','content','user','title','posted_at','like_count']
 
     def get_content(self,obj):
         return obj.post_id.content
