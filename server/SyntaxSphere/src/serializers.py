@@ -38,11 +38,16 @@ class PostSerializer(serializers.ModelSerializer):
 class LikesSerializer(serializers.ModelSerializer):
     post_content=serializers.SerializerMethodField()
     username=serializers.SerializerMethodField()
+    title=serializers.SerializerMethodField()
+    posted_at=serializers.SerializerMethodField()
+    like_count=serializers.SerializerMethodField()
+
+
 
     class Meta:
         model=Likes
-        fields=['id','user_id','post_id','post_content','username']
-        read_only_fields=['id','user_id','post_id']
+        fields=['id','user_id','post_id','post_content','username','title','posted_at','like_count']
+        read_only_fields=['id','user_id','post_id','post_content','username','title','posted_at','like_count']
 
     def get_post_content(self,obj):
         return obj.post_id.content
