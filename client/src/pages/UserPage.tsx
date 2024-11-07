@@ -53,10 +53,10 @@ const UserPage = () => {
                 elList = posts && <div className="flex flex-col">{posts.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={post} />))}</div>;
                 break;
             case 'comments':
-                elList = comments && <div className="flex flex-col">{comments.map((comment, i) => <Comment userPage={true} commentObj={comment} key={i}/>)}</div> 
-            break;
+                elList = comments && <div className="flex flex-col">{comments.map((comment, i) => <Comment userPage={true} commentObj={comment} key={i} />)}</div>;
+                break;
             case 'likes':
-                elList = likes && <div className="flex flex-col">{likes.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={{...post, id:post.post_id}} />))}</div>;
+                elList = likes && <div className="flex flex-col">{likes.map((post, i, posts) => (<Post isLast={i == posts.length - 1} key={post.id} post={{ ...post, id: post.post_id }} />))}</div>;
                 break;
         }
 
@@ -68,9 +68,8 @@ const UserPage = () => {
             <Navbar />
             <div className="container mx-auto p-6 mt-4">
 
-
                 <div className="bg-gray-900 p-6 pt-8 rounded-lg shadow-md ">
-                    <h1 className="text-3xl font-bold text-white mb-2">{user?.username || "Omar"}</h1>
+                    <h1 className="text-3xl font-bold text-white mb-2">{user?.username}</h1>
                     <p className="text-gray-400 mb-4">@{user?.username || "unknown"}</p>
                     <p className="text-gray-300 mb-4">{user?.bio || "No bio available"}</p>
 
