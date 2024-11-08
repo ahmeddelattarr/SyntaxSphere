@@ -91,7 +91,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['user_id','username', 'bio', 'git_hub_account', 'git_hub_url']
+        fields = ['user_id','username', 'bio', 'git_hub_url']
         read_only_fields =['user_id']
 
     def get_git_hub_url(self, obj):
