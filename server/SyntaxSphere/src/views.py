@@ -1,6 +1,7 @@
 
 
 from django.contrib.auth import authenticate
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
@@ -8,8 +9,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .models import User, Posts, Likes, Comments
-from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer
+
+
+from .models import User, Posts, Likes, Comments, Profile
+from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer,ProfileSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -150,13 +153,39 @@ class UserLikesViewSet(viewsets.ModelViewSet):
 
 class UserCommentsViewSet(viewsets.ModelViewSet):
 	permission_classes = (IsAuthenticated,)
-	serializer_class = LikesSerializer
+	serializer_class = CommentsSerializer
 
 	def get_queryset(self):
 		username=self.kwargs.get('username')
 		user = get_object_or_404(User, username=username)
 
 		return Comments.objects.filter(user_id=user)
+
+class ProfileViewSet(viewsets.ModelViewSet):
+	permission_classes = (IsAuthenticated,)
+	serializer_class = ProfileSerializer
+	lookup_field = 'username'
+
+	def get_queryset(self):
+		username = self.kwargs['username']
+		return Profile.objects.filter(username=username)
+
+	def list(self, request, *args, **kwargs):
+		raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
+
+	def retrieve(self, request, *args, **kwargs):
+		profile=self.get_object()
+		serializer=self.get_serializer(profile)
+		return Response(serializer.data)
+
+	def perform_update(self, serializer):
+		# If username is being updated, ensure it's unique
+		if 'username' in self.request.data:
+			new_username = self.request.data['username']
+			if User.objects.filter(username=new_username).exclude(id=self.request.user.id).exists():
+				raise serializers.ValidationError({'username': 'This username is already taken.'})
+		serializer.save()
+
 
 
 

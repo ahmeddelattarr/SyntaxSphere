@@ -32,6 +32,9 @@ const useFetchWithToken = <T>(
 				fetchData();
 				return;
 			}
+			if(response.status===404){
+				navigate("/");
+			}
 			setLoading(false);
 			setError(response.statusText);
 			return;

@@ -6,6 +6,8 @@ export interface PostData {
 	user: string;
 	posted_at: string;
 	like_count: number;
+	user_id:number;
+	post_id:string;
 }
 
 export interface PostResponse {

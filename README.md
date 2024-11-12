@@ -60,7 +60,7 @@ Example Response (Sign Up / Sign In):
 | `/posts/<uuid:id>/`            | DELETE | Delete a specific post            | N/A | HTTP 204 No Content |
 | `/posts/<uuid:id>/update/`     | PUT | Update a specific post            | `{"title": "string", "url": "string"}` | Updated post object |
 | `/posts/users/<str:username>/` | GET | Retrieve posts by a specific user | N/A | Array of post objects |
-| `posts/?search=<title>`        | GET | search in posts via title         | N/A | Array of post objects |
+| `/posts/?search=<title>`        | GET | search in posts via title         | N/A | Array of post objects |
 
 Example Response (GET /posts/):
 ```json
@@ -143,6 +143,14 @@ Example Response (GET /posts/<uuid:pk>/comments/):
   }
 ]
 ```
+### Profile Management
+
+| Endpoint     | Method | Description                          | Request Body                                           | Response                                                                      |
+|--------------|--------|--------------------------------------|--------------------------------------------------------|-------------------------------------------------------------------------------|
+| `/profiles/` | POST   | Create a bio and GitHub account user | `{"user_id": int, "bio": string, "git_hub_account": string}` | `{"user_id": int, "bio": "string", "git_hub_account": "string", "git_hub_url": "url"}` |
+| `/profiles/{user_id}/` | GET    | Retrieve a specific user profile     | N/A                                                    | `{"user_id": int, "bio": "string", "git_hub_account": "string", "git_hub_url": "url"}` |
+| `/profiles/{user_id}/` | PUT    | Update bio and GitHub account        | `{"bio": string, "git_hub_account": string}`            | `{"user_id": int, "bio": "string", "git_hub_account": "string", "git_hub_url": "url"}` |
+| `/profiles/{user_id}/` | DELETE | Delete a specific user profile       | N/A                                                    | `204 No Content`                                                              |
 
 ## Installation
 

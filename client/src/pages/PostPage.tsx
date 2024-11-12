@@ -19,7 +19,7 @@ const PostPage = () => {
     };
 
     const CommentsListEl = commentResponse?.results.length ? (
-        <div>{commentResponse.results.map((el) => <Comment key={el.id} commentObj={el} />)}</div>
+        <div>{commentResponse.results.map((el) => <Comment userPage={false} key={el.id} commentObj={el} />)}</div>
     ) : (
         <div className="text-gray-400 text-center mt-4">There are no comments yet.</div>
     );

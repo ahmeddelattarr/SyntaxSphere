@@ -9,7 +9,7 @@ interface InputFieldProps {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
-    variant?: "sign" | "sleep";
+    variant?: "sign" | "github";
 }
 
 const InputField: React.FC<InputFieldProps> = ({

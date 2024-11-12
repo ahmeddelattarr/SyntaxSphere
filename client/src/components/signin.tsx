@@ -4,6 +4,7 @@ import { Button } from "./ui/common/Button.tsx";
 import { useState } from "react";
 import { API_URL } from "../../config/apiConfig.ts";
 import InputField from "./ui/common/InputField.tsx";
+import { fetchWithToken } from "../lib/utils.ts";
 
 interface SignInResponse {
   access: string;
@@ -46,6 +47,14 @@ const SignIn: React.FC = () => {
       const data: SignInResponse = await response.json();
       localStorage.setItem('access', data.access);
       localStorage.setItem('refresh', data.refresh);
+
+      const profileIsCreated = await fetchWithToken(`profiles/${username.trim()}/`, "GET");
+      const profileData: { bio: string; } = await profileIsCreated.json();
+      if (profileData.bio === null) {
+        navigate(`/profile/${username}`);
+        return;
+      }
+
       navigate('/');
     } catch (error) {
       setErrorMessage('An error occurred while signing in. Please try again.');

@@ -30,10 +30,10 @@ const Homepage = () => {
           {posts && posts.length > 0 ? (
             PostsEl
           ) : (
-            <p className="text-center text-gray-400">No posts available</p>
+            <p className="text-center mt-6 text-gray-400">No posts available</p>
           )}
         </div>
-        <Pagination refreshTimeLine={refreshTimeLine} currentPage={currentPage} totalPosts={postResponse?.count || 0} />
+        {postResponse && postResponse.count>1 && <Pagination refreshTimeLine={refreshTimeLine} currentPage={currentPage} totalPosts={postResponse?.count || 0} />}
       </div>
     </div>
   );
