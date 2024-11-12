@@ -9,7 +9,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from yaml import serialize
+
 
 from .models import User, Posts, Likes, Comments, Profile
 from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer,ProfileSerializer

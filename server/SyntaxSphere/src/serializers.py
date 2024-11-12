@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from urllib3 import request
+
 
 from .models import Posts, Likes, Comments, Profile
 
