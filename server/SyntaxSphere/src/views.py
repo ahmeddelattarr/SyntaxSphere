@@ -9,6 +9,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 from rest_framework import generics,viewsets,filters
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from yaml import serialize
+
 from .models import User, Posts, Likes, Comments, Profile
 from .serializers import UserSerializer, SignInSerializer, PostSerializer, CommentsSerializer, LikesSerializer,ProfileSerializer
 
@@ -170,6 +172,11 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 	def list(self, request, *args, **kwargs):
 		raise MethodNotAllowed('GET', detail="Listing profiles is not allowed.")
+
+	def retrieve(self, request, *args, **kwargs):
+		profile=self.get_object()
+		serializer=self.get_serializer(profile)
+		return Response(serializer.data)
 
 	def perform_update(self, serializer):
 		# If username is being updated, ensure it's unique

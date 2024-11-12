@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from urllib3 import request
+
 from .models import Posts, Likes, Comments, Profile
 
 
@@ -87,15 +89,20 @@ class CommentsSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    git_hub_url = serializers.SerializerMethodField()
+    git_hub_account = serializers.SerializerMethodField()
+    is_my_own_profile=serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ['user_id','username', 'bio', 'git_hub_url']
+        fields = ['user_id','username', 'bio', 'git_hub_account','is_my_own_profile']
         read_only_fields =['user_id']
 
-    def get_git_hub_url(self, obj):
-        return obj.git_hub_url
+    def get_git_hub_account(self, obj):
+        return obj.git_hub_account
+
+    def get_is_my_own_profile(self,obj):
+        request = self.context.get('request')
+        return request.user.username==obj.username if request else False
 
     def create(self, validated_data):
         user = self.context['request'].user
