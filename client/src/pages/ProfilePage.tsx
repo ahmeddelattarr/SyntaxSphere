@@ -11,9 +11,8 @@ import { UserData } from "../types/user-interface";
 const ProfilePage = () => {
     const username = useParams().username!;
     const navigate = useNavigate();
-    const [user, setUser] = useState<UserData>({ bio: "", git_hub_account: "", user_id: 0 });
+    const [user, setUser] = useState<UserData>({ bio: "", git_hub_account: "", user_id: 0, is_my_own_profile:true });
     const [error, setError] = useState<string | null>(null);
-    console.log(user)
 
     useEffect(() => {
         const fetchCurrentBio = async () => {

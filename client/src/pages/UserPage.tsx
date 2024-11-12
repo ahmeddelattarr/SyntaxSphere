@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/ui/Navbar";
 import useFetchWithToken from "../hooks/useFetchWithToken";
 import { UserData } from "../types/user-interface";
@@ -9,10 +9,12 @@ import { PostData } from "../types/post-interfaces";
 import Post from "../components/ui/Post";
 import { CommentData } from "../types/comment-interfaces";
 import Comment from "../components/ui/Comment";
+import { Button } from "../components/ui/common/Button";
 
 
 const UserPage = () => {
     const user_name = useParams().userId!;
+    const navigate = useNavigate();
     const [activePanel, setActivePanel] = useState<"posts" | "comments" | "likes">("posts");
     const { data: user, error, loading } = useFetchWithToken<UserData>(`profiles/${user_name}/`, "GET");
     const { data: posts } = useFetchWithToken<PostData[]>(`/posts/users/${user_name}`, 'GET');
@@ -22,6 +24,10 @@ const UserPage = () => {
     const handleShowPosts = () => setActivePanel("posts");
     const handleShowComments = () => setActivePanel("comments");
     const handleShowLikes = () => setActivePanel("likes");
+
+    const navigateToEditProfile = () => {
+        navigate(`/profile/${user_name}`);
+    };
 
     if (loading) {
         return (
@@ -72,10 +78,10 @@ const UserPage = () => {
                     <h1 className="text-3xl font-bold text-white mb-2">{user?.username}</h1>
                     <p className="text-gray-400 mb-4">@{user?.username || "unknown"}</p>
                     <p className="text-gray-300 mb-4">{user?.bio || "No bio available"}</p>
-
-                    {user?.git_hub_account && (
+<div className="flex justify-between">
+    {user?.git_hub_account && (
                         <a
-                            href={'https://github.com/'+user.git_hub_account}
+                            href={'https://github.com/' + user.git_hub_account}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex w-fit items-center text-white bg-blue-500 px-4 py-2 rounded-full font-semibold hover:bg-blue-600 transition-colors"
@@ -84,6 +90,15 @@ const UserPage = () => {
                             Visit GitHub Profile
                         </a>
                     )}
+                    {user?.is_my_own_profile && (
+                        <Button
+                            onClick={navigateToEditProfile}
+                            variant="pagination"
+                        >
+                            Edit Profile
+                        </Button>
+                    )}
+                    </div>
                     <UserStatsPanel
                         activePanel={activePanel}
                         onShowPosts={handleShowPosts}
