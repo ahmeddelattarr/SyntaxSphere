@@ -73,9 +73,9 @@ const UserPage = () => {
                     <p className="text-gray-400 mb-4">@{user?.username || "unknown"}</p>
                     <p className="text-gray-300 mb-4">{user?.bio || "No bio available"}</p>
 
-                    {user?.git_hub_url && (
+                    {user?.git_hub_account && (
                         <a
-                            href={user.git_hub_url}
+                            href={'https://github.com/'+user.git_hub_account}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex w-fit items-center text-white bg-blue-500 px-4 py-2 rounded-full font-semibold hover:bg-blue-600 transition-colors"

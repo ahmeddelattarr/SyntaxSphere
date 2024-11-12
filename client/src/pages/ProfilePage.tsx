@@ -11,8 +11,9 @@ import { UserData } from "../types/user-interface";
 const ProfilePage = () => {
     const username = useParams().username!;
     const navigate = useNavigate();
-    const [user, setUser] = useState<UserData>({ bio: "", git_hub_url: "", user_id: 0 });
+    const [user, setUser] = useState<UserData>({ bio: "", git_hub_account: "", user_id: 0 });
     const [error, setError] = useState<string | null>(null);
+    console.log(user)
 
     useEffect(() => {
         const fetchCurrentBio = async () => {
@@ -30,6 +31,16 @@ const ProfilePage = () => {
 
 
     const handleSubmit = async (e: React.FormEvent) => {
+        async function validateGitHubUsername(username:string) {
+            try {
+                const response = await fetch(`https://api.github.com/users/${username}`);
+                return response.ok;
+            } catch (error) {
+                console.error("GitHub validation error:", error);
+                return false;
+            }
+        }
+
         e.preventDefault();
         setError(null);
 
@@ -38,11 +49,19 @@ const ProfilePage = () => {
             return;
         }
 
+        if (user.git_hub_account) {
+            const isValidGitHubUsername = await validateGitHubUsername(user.git_hub_account);
+            if (!isValidGitHubUsername) {
+                setError("Please enter a valid GitHub username.");
+                return;
+            }
+        }
+
         try {
             const response = await fetchWithToken(`profiles/${username}/`, "PUT", {
                 bio: user.bio,
-                git_hub_url: user.git_hub_url,
-                username:username
+                git_hub_account: user.git_hub_account,
+                username: username
             });
             if (!response.ok) {
                 const errorData = await response.json();
@@ -67,23 +86,27 @@ const ProfilePage = () => {
                         <Label className="block text-white mb-2">Bio</Label>
                         <TextArea
                             name="bio"
-                            value={user.bio||""}
-                            onChange={(event)=>{setUser(prevState=>{
-                                return {...prevState,bio:event.target.value}
-                            })}}
+                            value={user.bio || ""}
+                            onChange={(event) => {
+                                setUser(prevState => {
+                                    return { ...prevState, bio: event.target.value };
+                                });
+                            }}
                             placeholder="Enter your bio"
                             variant={"bio"}
                         />
 
                         <InputField
                             id="github"
-                            label="GitHub URL"
-                            value={user.git_hub_url||""}
-                            onChange={(event)=>{setUser(prevState=>{
-                                return {...prevState,git_hub_url:event.target.value}
-                            })}}
-                            type="url"
-                            placeholder="Enter your GitHub URL (optional)"
+                            label="GitHub Account"
+                            value={user.git_hub_account || ""}
+                            onChange={(event) => {
+                                setUser(prevState => {
+                                    return { ...prevState, git_hub_account:event.target.value };
+                                });
+                            }}
+                            type="text"
+                            placeholder="Enter your GitHub Account (optional)"
                             variant="github"
                         />
 

@@ -70,12 +70,13 @@ const Post: React.FC<PostProps> = ({ post, isLast = false, isSingular = false, r
     };
 
     const postOnClickHandler: React.EventHandler<React.MouseEvent<HTMLDivElement>> = (event) => {
-        //TODO fix bug here
         if ((event.target as HTMLElement).tagName === 'H2') {
             navigate(`/user/${post.user}`);
             return;
         }
         if(isSingular&&(event.target as HTMLElement).closest('.cursor-pointer'))
+            return;
+        if(!isSingular&&(event.target as HTMLElement).closest('.gap-4'))
             return;
         navigate('/post/' + post.id);
     };
