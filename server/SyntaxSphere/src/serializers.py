@@ -89,7 +89,7 @@ class CommentsSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    git_hub_account = serializers.SerializerMethodField()
+    
     is_my_own_profile=serializers.SerializerMethodField()
 
     class Meta:
@@ -97,8 +97,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['user_id','username', 'bio', 'git_hub_account','is_my_own_profile']
         read_only_fields =['user_id']
 
-    def get_git_hub_account(self, obj):
-        return obj.git_hub_account
+    
 
     def get_is_my_own_profile(self,obj):
         request = self.context.get('request')
