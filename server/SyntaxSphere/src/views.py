@@ -79,7 +79,7 @@ class HandlingPostsViewSet(viewsets.ModelViewSet):
 	queryset = Posts.objects.all().order_by('-posted_at')
 	serializer_class = PostSerializer
 	filter_backends = [filters.SearchFilter]
-	search_fields = ['title']
+	search_fields = ['title','url']
 	lookup_field='id'
 
 	def perform_create(self, serializer):

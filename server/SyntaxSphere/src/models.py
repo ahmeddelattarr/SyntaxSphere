@@ -1,10 +1,11 @@
-from platform import machine
+
 
 from django.contrib.auth.models import User
-from django.db.models import CASCADE
+from django.db.models import CASCADE, UUIDField
 from django.utils import timezone
 from django.db import models
 import uuid
+from cloudinary.models import CloudinaryField
 # Create your models here.
 
 
@@ -17,6 +18,7 @@ class Posts(models.Model):
 	posted_at=models.DateTimeField(default=timezone.now)
 	like_count = models.PositiveIntegerField(default=0)
 	content = models.TextField()
+	image = CloudinaryField('posts', null=True, blank=True)
 
 
 class Likes(models.Model):
@@ -38,6 +40,7 @@ class Profile(models.Model):
 	bio=models.CharField(max_length=120,null=True,blank=True)
 	git_hub_account=models.CharField(max_length=39,null=True,blank=True)
 
+
 	@property
 	def git_hub_url(self):
 		if self.git_hub_account:
@@ -49,6 +52,9 @@ class Profile(models.Model):
 		super(Profile,self).save(*args,**kwargs)
 	def __str__(self):
 		return self.git_hub_account
+
+
+
 
 
 
