@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+import cloudinary.uploader
 
 
 from .models import Posts, Likes, Comments, Profile
@@ -33,8 +34,12 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Posts
-        fields = ['id', 'title', 'url', 'user','user_id','posted_at', 'like_count','content']
+        fields = ['id', 'title', 'url', 'user','user_id','posted_at', 'like_count','content','image']
         read_only_fields = ['id', 'user', 'posted_at', 'like_count']
+
+
+
+
 
 
 class LikesSerializer(serializers.ModelSerializer):
@@ -94,7 +99,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ['user_id','username', 'bio', 'git_hub_account','is_my_own_profile']
+        fields = ['user_id','username', 'bio', 'git_hub_account','is_my_own_profile','profile_pic']
         read_only_fields =['user_id']
 
     def get_git_hub_account(self, obj):
@@ -116,6 +121,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             user = instance.user_id
             user.username = validated_data['username']
             user.save()
+
+        if 'profile_pic' in validated_data:
+            instance.profile_pic = validated_data['profile_pic']
+
         return super().update(instance, validated_data)
 
 
