@@ -18,7 +18,7 @@ class Posts(models.Model):
 	posted_at=models.DateTimeField(default=timezone.now)
 	like_count = models.PositiveIntegerField(default=0)
 	content = models.TextField()
-	image = CloudinaryField('posts', null=True, blank=True)
+	image = CloudinaryField('posts', null=True, blank=True,folder="posts")
 
 
 class Likes(models.Model):
@@ -39,6 +39,7 @@ class Profile(models.Model):
 	username=models.CharField(max_length=150,unique=True,null=False,blank=False)
 	bio=models.CharField(max_length=120,null=True,blank=True)
 	git_hub_account=models.CharField(max_length=39,null=True,blank=True)
+	profile_pic=CloudinaryField('profile_pics',null=True,blank=True,folder="profile_pics")
 
 
 	@property
